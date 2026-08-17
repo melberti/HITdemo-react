@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Luckiest+Guy&display=swap');
+
+
+
+@import "tailwindcss";
+@tailwind utilities;
+
+/* Ensure Tailwind knows to look for the .dark class at the root */
+
+@custom-variant dark (&:where(.dark-mode, .dark-mode *));
+
+/*@theme {
+  --font-HIT: "Roboto Mono", mono;
+  --font-banner: "Luckiest Guy", mono;
+ --primary-pink: #9c1e5c;
+  --primary-orange: rgb(189, 85, 57);
+  --hover-primary-pink: @apply bg-pink-950;
+  --hover-primary-orange: @apply bg-orange-700; 
+}*/
+
+@theme {
+  --font-HIT: "Google Sans Flex", mono;
+  --font-banner: "Luckiest Guy", mono;
+  --primary-pink: #9c1e5c;
+  --primary-orange: #f97316;
+}
+
+@layer base {
+  html,
+  body,
+  #root,
+  .container {
+    @apply w-screen;
+    font-family: var(--font-HIT);
+  }
+
+  h1 {
+    @apply text-3xl font-bold;
+  }
+  h2 {
+    @apply text-2xl font-semibold;
+  }
+  h3 {
+    @apply text-xl font-semibold;
+  }
+}
+
+@layer components {
+  .input {
+    @apply rounded-md border border-stone-200 px-2 py-1 text-sm shadow-inner placeholder:text-stone-400 focus:outline-offset-1 focus:outline-yellow-400 focus:outline-none;
+  }
+
+  .logo {
+    background-color: var(--primary-pink);
+    color: white;
+    padding: 10px;
+    font-family: var(--font-banner);
+    @apply text-7xl;
+  }
+
+  .dark .logo {
+    background-color: rgb(from var(--primary-pink) r g b / 0.9);
+    @apply text-neutral-900;
+  }
+
+  header {
+    @apply flex justify-end gap-4 bg-neutral-900 p-2 text-neutral-100;
+  }
+
+  footer {
+    @apply flex gap-4 bg-neutral-900 p-2 text-neutral-100;
+  }
+
+  .dark header,
+  .dark footer {
+    @apply bg-neutral-700;
+  }
+
+  .dark main {
+    @apply bg-neutral-500 text-neutral-100;
+  }
+
+  button {
+    @apply rounded-md border border-neutral-100 shadow-inner focus:ring focus:ring-stone-300 focus:ring-offset-2 focus:outline-offset-1 focus:outline-yellow-400 focus:outline-none active:bg-stone-300 disabled:cursor-not-allowed;
+    /* transition: transform 0.3s ease;  */
+  }
+
+  button:hover{
+    transform: scale(1.1); 
+    font-weight: 600;
+  }
+
+  button.primary {
+    background-color: var(--primary-orange);
+  }
+
+  button.primary:hover {
+    background-color: #ea580c;
+  }
+
+  button.secondary {
+    @apply bg-neutral-400 text-neutral-900;
+  }
+
+  button.secondary:hover {
+    @apply bg-neutral-500;
+  }
+
+  button.small {
+    @apply h-8 p-1 text-sm;
+  }
+
+  button.normal {
+    @apply h-10 p-2;
+  }
+
+  select, input {
+    font-weight: 400;
+    font-family: var(--font-HIT);
+    outline: none;
+    padding-right: 10px;
+    background-color: white;
+    @apply p-1 mx-2 rounded-md text-neutral-600 ;
+  }
+
+  .filter input {
+    width: 600px;
+    
+  }
+
+  option  {
+
+    @apply text-neutral-800;
+  }
+  
+  .filter {
+    background-color: var(--primary-orange);
+    text-transform: uppercase;
+    @apply p-3 ;
+      }
+
+      .dark .filter {
+         @apply bg-orange-400;
+      }
+
+  
+}
+
+/* https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje */
+.loader {
+  width: 45px;
+  aspect-ratio: 0.75;
+  --c: no-repeat linear-gradient(stone-600, 0 0);
+  background:
+    var(--c) 0% 50%,
+    var(--c) 50% 50%,
+    var(--c) 100% 50%;
+  background-size: 20% 50%;
+  animation: loading 1s infinite linear;
+}
