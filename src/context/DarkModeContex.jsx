@@ -31,7 +31,6 @@ function DarkModeProvider({ children }) {
     }
   }, [isDarkMode]);
 
-  console.log("darkmode:", isDarkMode);
 
   //return context provider; wrap entire app in this so it can be used throughout
   return (
