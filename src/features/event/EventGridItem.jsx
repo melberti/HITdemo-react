@@ -1,7 +1,11 @@
-import { formatWithDay, formatTime } from "../../utilities/dateFormats";
-import { HiCalendarDays, HiMiniCurrencyDollar, HiAdjustmentsHorizontal, HiClock   } from "react-icons/hi2";
-
-import { SlLocationPin } from "react-icons/sl";
+import { formatWithDay, formatTime } from "../../utilities/dateTimeFormats";
+import {
+  HiCalendarDays,
+  HiMiniCurrencyDollar,
+  HiClock,
+  HiMapPin,
+  HiMiniTag,
+} from "react-icons/hi2";
 
 function EventGridItem({ event }) {
   const {
@@ -16,8 +20,6 @@ function EventGridItem({ event }) {
     cost,
   } = event;
 
-  console.log('eventDate', eventDate)
-
   return (
     <li className="border-2 border-neutral-300 p-2">
       <img
@@ -28,20 +30,22 @@ function EventGridItem({ event }) {
         max-height="50"
       />
       <h3 className="textPink">{title}</h3>
-      <p>
-        {description}
-        </p>
-
+      <p>{description}</p>
       <div>
-        <HiCalendarDays color="var(--primary-pink)" style={{display: "inline"}} />{formatWithDay(eventDate)}
-        <br/><HiClock  color="var(--primary-pink)" style={{display: "inline"}}/>{ formatTime(eventStartTime) }
-        </div>  
-        <SlLocationPin color="var(--primary-pink)" style={{display: "inline"}} />{venue.name}, {venue.city} {venue.state}
-       
-        <HiAdjustmentsHorizontal  color="var(--primary-pink)" style={{display: "inline"}} />{category.value}
+        <HiCalendarDays className="icon" />
+        {formatWithDay(eventDate)}
         <br />
-        <HiMiniCurrencyDollar color="var(--primary-pink)" style={{display: "inline"}} />{cost === 0 ? "FREE!" : `${cost}`}
-      
+        <HiClock className="icon" />
+        {formatTime(eventStartTime)}
+      </div>
+      <HiMapPin className="icon" />
+      {venue.name}, {venue.city} {venue.state}
+      <br />
+      <HiMiniTag className="icon" />
+      {category.value}
+      <br />
+      <HiMiniCurrencyDollar className="icon" />
+      {cost === 0 ? "FREE!" : `${cost}`}
     </li>
   );
 }

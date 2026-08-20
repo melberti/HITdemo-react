@@ -1,6 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Luckiest+Guy&display=swap');
-
-
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Luckiest+Guy&display=swap");
 
 @import "tailwindcss";
 @tailwind utilities;
@@ -50,9 +48,28 @@
 }
 
 @layer components {
-  .input {
-    @apply rounded-md border border-stone-200 px-2 py-1 text-sm shadow-inner placeholder:text-stone-400 focus:outline-offset-1 focus:outline-yellow-400 focus:outline-none;
+  input {
+    @apply w-xs rounded-md border border-stone-200 px-2 py-1 text-base shadow-inner placeholder:text-stone-400 focus:outline-none;
   }
+
+  label {
+    @apply justify-baseline text-base;
+  }
+
+  .inputDiv {
+    @apply mt-5 grid grid-cols-[150px_1fr] items-center gap-4 wrap-break-word;
+    min-height: fit-content;
+  }
+
+  .inputDiv button {
+    margin-left: 5px;
+  }
+
+  /* .inputDiv .formbutton {
+  @apply: col-start-2;
+  margin-left: 50px;
+  height: fit-content !important;
+} */
 
   .logo {
     background-color: var(--primary-pink);
@@ -84,73 +101,95 @@
     @apply bg-neutral-500 text-neutral-100;
   }
 
-  button {
-    @apply rounded-md border border-neutral-100 shadow-inner focus:ring focus:ring-stone-300 focus:ring-offset-2 focus:outline-offset-1 focus:outline-yellow-400 focus:outline-none active:bg-stone-300 disabled:cursor-not-allowed;
-    /* transition: transform 0.3s ease;  */
+  button,
+  .button {
+    @apply rounded-md border border-neutral-100 shadow-inner focus:outline-none active:bg-stone-300 disabled:cursor-not-allowed;
+    /* transition: transform 0.3s ease;  
+    focus:ring-stone-300 focus:ring-offset-2 focus:outline-offset-1 focus:outline-yellow-400 focus:ring
+    */
   }
 
-  button:hover{
-    transform: scale(1.1); 
+  /* button:hover,
+  .button:hover {
+    transform: scale(1.1);
     font-weight: 600;
-  }
+  } */
 
-  button.primary {
+  button.primary,
+  .button.primary {
     background-color: var(--primary-orange);
   }
 
-  button.primary:hover {
+  button.primary:hover,
+  .button.primary:hover {
     background-color: #ea580c;
   }
 
-  button.secondary {
+  button.secondary,
+  .button.secondary {
     @apply bg-neutral-400 text-neutral-900;
   }
 
-  button.secondary:hover {
+  button.secondary:hover,
+  .button.secondary:hover {
     @apply bg-neutral-500;
   }
 
-  button.small {
+  button.small,
+  .button.small {
     @apply h-8 p-1 text-sm;
   }
 
-  button.normal {
-    @apply h-10 p-2;
+  button.normal,
+  .button.normal {
+    @apply h-10 p-1;
   }
 
-  select, input {
+  select,
+  input {
     font-weight: 400;
     font-family: var(--font-HIT);
     outline: none;
     padding-right: 10px;
     background-color: white;
-    @apply p-1 mx-2 rounded-md text-neutral-600 ;
+    @apply mx-2 rounded-md p-1 text-neutral-600;
   }
 
   .filter input {
     width: 600px;
-}
+  }
 
-
-  option  {
-
+  option {
     @apply text-neutral-800;
   }
-  
+
   .filter {
     background-color: var(--primary-orange);
     text-transform: uppercase;
-    @apply p-3 ;
-      }
+    @apply p-3;
+  }
 
-      .dark .filter {
-         @apply bg-orange-400;
-      }
+  .dark .filter {
+    @apply bg-orange-400;
+  }
 
-      .textPink {
-        color: var(--primary-pink)
-      }
-  
+  .textPink,
+  a {
+    color: var(--primary-pink);
+  }
+
+  a::after {
+    content: ">";
+    margin-left: 2px;
+  }
+
+  a.button::after {
+    content: "";
+  }
+}
+
+.icon {
+  @apply mr-2 inline text-(--primary-pink);
 }
 
 /* https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje */

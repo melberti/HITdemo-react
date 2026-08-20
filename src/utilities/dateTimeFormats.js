@@ -1,7 +1,6 @@
 export function formatWithDay(date) {
 
   const dateToFormat = new Date(date);
-  console.log("newdate", dateToFormat);
 
   const options = {
     weekday: "long",

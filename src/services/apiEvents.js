@@ -17,6 +17,9 @@ let { data, error } = await supabase
   `).order('eventDate, eventStartTime', { ascending: true }) // Newest first
   .abortSignal(controller.signal); // Bind the signal
 
+  //not sure I need to use this controller signal just yet
+  //currently filtering on records returned rather than filtering on query
+
 if (error) {
   if (error.message.includes('aborted')) {
       console.log('Request was canceled');

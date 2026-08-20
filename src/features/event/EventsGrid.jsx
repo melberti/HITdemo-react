@@ -1,37 +1,34 @@
 import { useEvents } from "./useEvents";
-import EventGridItem from "./EventGridItem"
+import EventGridItem from "./EventGridItem";
 import Spinner from "../../ui/Spinner";
 import NoEventsFound from "./NoEventsFound";
 import { useEventFilter } from "../../context/EventFilterContext";
 
 function EventsGrid() {
+  const { events, isLoading } = useEvents();
 
-   const {events, isLoading} = useEvents();
+  const { filter } = useEventFilter(); //filter set to lowercase in EventsFilter at time of set
+  let displayEvents;
 
-const {filter} = useEventFilter(); //filter set to lowercase in EventsFilter at time of set
-let displayEvents;
+  if (filter) {
+    displayEvents = events.filter(
+      (event) =>
+        event?.title?.toLowerCase().includes(filter) ||
+        event?.venue?.name?.toLowerCase().includes(filter) ||
+        event?.venue?.city?.toLowerCase().includes(filter) ||
+        event?.description?.toLowerCase().includes(filter) ||
+        event?.category?.value?.toLowerCase().includes(filter),
+    );
+  } else displayEvents = events;
 
+  if (isLoading) return <Spinner />;
 
-if(filter){
-  console.log('filtering events on ', filter);
-displayEvents = events.filter((event) => event?.title?.toLowerCase().includes(filter) || event?.venue?.name?.toLowerCase().includes(filter) || event?.venue?.city?.toLowerCase().includes(filter) || event?.description?.toLowerCase().includes(filter));
-}
-else displayEvents = events;
-
-
-    
-  if(isLoading) return <Spinner />
-
-  if(!events) return <NoEventsFound />
-
-     console.log('events', events);
-
-console.log('displayevents', displayEvents)
+  if (!events) return <NoEventsFound />;
 
   return (
-    <ul className="grid grid-cols-1 gap-10 mt-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <ul className="mt-5 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {displayEvents?.map((event) => (
-        <EventGridItem event={event} key={event.id } />
+        <EventGridItem event={event} key={event.id} />
       ))}
     </ul>
   );
