@@ -6,12 +6,12 @@ function Logo() {
   const { isDarkMode } = useDarkMode();
 
   return (
-    <section className="logo item flex items-end gap-4 p-5">
+    <section className="logo">
       <Link to="/">
         {isDarkMode ? (
-          <img src="./logo.png" width="125px" />
+          <img src="./logo.png" width="125px" height="118" />
         ) : (
-          <img src="./logo_inverse.png" width="125px" />
+          <img src="./logo_inverse.png" width="125px" height="118" />
         )}
       </Link>
       <span>Hear. There. Everywhere.</span>

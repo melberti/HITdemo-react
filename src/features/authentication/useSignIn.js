@@ -18,7 +18,7 @@ export function useSignIn() {
             }
         },
         onSuccess: (data) => {
-            queryClient.setQueryData(["user"], data.user.user);
+            queryClient.setQueryData(["user"], data.user);
             navigate("/dashboard", { replace: true });
         }
     })

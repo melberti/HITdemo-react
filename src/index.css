@@ -4,18 +4,9 @@
 @tailwind utilities;
 
 /* Ensure Tailwind knows to look for the .dark class at the root */
-
 @custom-variant dark (&:where(.dark-mode, .dark-mode *));
 
-/*@theme {
-  --font-HIT: "Roboto Mono", mono;
-  --font-banner: "Luckiest Guy", mono;
- --primary-pink: #9c1e5c;
-  --primary-orange: rgb(189, 85, 57);
-  --hover-primary-pink: @apply bg-pink-950;
-  --hover-primary-orange: @apply bg-orange-700; 
-}*/
-
+/* brand colors and fonts */
 @theme {
   --font-HIT: "Google Sans Flex", mono;
   --font-banner: "Luckiest Guy", mono;
@@ -23,12 +14,24 @@
   --primary-orange: #f97316;
 }
 
+/* 
+ORDER MATTERS!
+Tailwind builds CSS in this order:
+   base → lowest specificity, ideal for element-level styles
+   components → medium specificity, ideal for reusable classes
+   utilities → highest specificity, ideal for atomic classes
+
+   This ordering matters because later layers override earlier ones.
+*/
+
+/* use @layer base for global element resets and typography */
+/* styling HTML tags */
 @layer base {
   html,
   body,
   #root,
   .container {
-    @apply w-screen;
+    @apply w-full;
     font-family: var(--font-HIT);
   }
 
@@ -45,9 +48,7 @@
   p {
     @apply pt-2;
   }
-}
 
-@layer components {
   input {
     @apply w-xs rounded-md border border-stone-200 px-2 py-1 text-base shadow-inner placeholder:text-stone-400 focus:outline-none;
   }
@@ -56,57 +57,56 @@
     @apply justify-baseline text-base;
   }
 
-  .inputDiv {
-    @apply mt-5 grid grid-cols-[150px_1fr] items-center gap-4 wrap-break-word;
-    min-height: fit-content;
-  }
-
-  .inputDiv button {
-    margin-left: 5px;
-  }
-
-  /* .inputDiv .formbutton {
-  @apply: col-start-2;
-  margin-left: 50px;
-  height: fit-content !important;
-} */
-
-  .logo {
-    background-color: var(--primary-pink);
-    color: white;
-    padding: 10px;
-    font-family: var(--font-banner);
-    @apply text-7xl;
-  }
-
-  .dark .logo {
-    background-color: rgb(from var(--primary-pink) r g b / 0.9);
-    @apply text-neutral-900;
-  }
-
   header {
-    @apply flex justify-end gap-4 bg-neutral-900 p-2 text-neutral-100;
+    @apply flex w-full items-center justify-end gap-4 bg-neutral-900 p-2 px-5 text-neutral-100;
   }
 
   footer {
     @apply flex gap-4 bg-neutral-900 p-2 text-neutral-100;
   }
 
-  .dark header,
-  .dark footer {
-    @apply bg-neutral-700;
-  }
-
-  .dark main {
-    @apply bg-neutral-500 text-neutral-100;
-  }
-
   button,
   .button {
-    @apply rounded-md border border-neutral-100 shadow-inner focus:outline-none active:bg-stone-300 disabled:cursor-not-allowed;
-    /* transition: transform 0.3s ease;  
-    focus:ring-stone-300 focus:ring-offset-2 focus:outline-offset-1 focus:outline-yellow-400 focus:ring
-    */
+    @apply inline w-auto rounded-md border border-neutral-100 text-nowrap text-neutral-100 shadow-inner focus:ring focus:outline-none active:bg-stone-300 disabled:cursor-not-allowed;
+  }
+
+  select,
+  input {
+    font-weight: 400;
+    font-family: var(--font-HIT);
+    outline: none;
+    padding-right: 10px;
+    background-color: white;
+    @apply mx-2 rounded-md p-1 text-neutral-600;
+  }
+
+  option {
+    @apply text-neutral-800;
+  }
+}
+
+/* use @layer components for reusable, styled UI components */
+/* defining reusable classes */
+/* dark-mode overrides using raw CSS need no @layer */
+@layer components {
+  .inputDiv {
+    @apply mt-5 grid grid-cols-[150px_1fr] items-center gap-4 wrap-break-word;
+    min-height: fit-content;
+    justify-content: flex-start;
+  }
+
+  .logo {
+    @apply flex items-center p-3 text-2xl sm:text-3xl md:text-5xl lg:text-6xl;
+    background-color: var(--primary-pink);
+    color: white;
+    font-family: var(--font-banner);
+    max-height: 145px;
+    line-height: 0%;
+  }
+
+  .siteName {
+    font-family: var(--font-banner);
+    font-weight: 200;
   }
 
   /* button:hover,
@@ -127,50 +127,42 @@
 
   button.secondary,
   .button.secondary {
-    @apply bg-neutral-400 text-neutral-900;
+    background-color: #be185d;
   }
 
   button.secondary:hover,
   .button.secondary:hover {
-    @apply bg-neutral-500;
+    background-color: #831843;
+  }
+
+  button.neutral,
+  .button.neutral {
+    @apply bg-neutral-300 text-neutral-900;
+  }
+
+  button.neutral:hover,
+  .button.neutral:hover {
+    @apply bg-neutral-400;
   }
 
   button.small,
   .button.small {
-    @apply h-8 p-1 text-sm;
+    @apply h-6 px-1 py-1 text-sm md:h-8;
   }
 
   button.normal,
   .button.normal {
-    @apply h-10 p-1;
-  }
-
-  select,
-  input {
-    font-weight: 400;
-    font-family: var(--font-HIT);
-    outline: none;
-    padding-right: 10px;
-    background-color: white;
-    @apply mx-2 rounded-md p-1 text-neutral-600;
+    @apply h-8 p-2 py-1 text-sm md:h-10 md:px-4 md:text-base;
   }
 
   .filter input {
-    width: 600px;
-  }
-
-  option {
-    @apply text-neutral-800;
+    width: 550px;
   }
 
   .filter {
     background-color: var(--primary-orange);
     text-transform: uppercase;
-    @apply p-3;
-  }
-
-  .dark .filter {
-    @apply bg-orange-400;
+    @apply flex w-full overflow-x-hidden p-3;
   }
 
   .textPink,
@@ -178,18 +170,39 @@
     color: var(--primary-pink);
   }
 
-  a::after {
+  a.caret::after {
     content: ">";
     margin-left: 2px;
   }
 
-  a.button::after {
-    content: "";
+  a.button {
+    @apply pt-1 text-neutral-100;
   }
 }
 
+/* no @layer at all when writing one‑off utility compositions that don’t need ordering guarantees. */
+/* dark-mode overrides using raw CSS */
+/* animations */
 .icon {
   @apply mr-2 inline text-(--primary-pink);
+}
+
+.dark .filter {
+  @apply bg-orange-400;
+}
+
+.dark .logo {
+  background-color: rgb(from var(--primary-pink) r g b / 0.9);
+  @apply text-neutral-900;
+}
+
+.dark header,
+.dark footer {
+  @apply bg-neutral-700;
+}
+
+.dark main {
+  @apply bg-neutral-500 text-neutral-100;
 }
 
 /* https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje */
@@ -203,4 +216,12 @@
     var(--c) 100% 50%;
   background-size: 20% 50%;
   animation: loading 1s infinite linear;
+}
+
+h2.descriptor {
+  font-weight: 400;
+}
+
+.datetime {
+  width: 150px !important;
 }

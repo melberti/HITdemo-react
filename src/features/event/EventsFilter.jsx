@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useEventFilter } from "../../context/EventFilterContext";
 import Button from "../../ui/Button";
 
@@ -21,7 +20,7 @@ function EventsFilter() {
         value={filter}
         onChange={(e) => handleChange(e)}
       />
-      <Button type="secondary" onClick={() => setFilter("")}>
+      <Button type="neutral" onClick={() => setFilter("")}>
         Reset
       </Button>
     </div>

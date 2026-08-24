@@ -6,7 +6,7 @@ export function useSignUp() {
 
     const { mutate: signUp, isLoading } = useMutation({
 
-        mutationFn: ({ email, password }) => signUpApi({ email, password, firstName, lastName }),
+        mutationFn: ({ email, password, firstName, lastName }) => signUpApi({ email, password, firstName, lastName }),
         mutationKey: ["user"],
         onError: (err) => {
             toast.error(err.message);

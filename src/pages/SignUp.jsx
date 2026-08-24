@@ -1,10 +1,13 @@
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router";
-import Button from "../ui/Button";
 import { useSignUp } from "../features/authentication/useSignup";
-import FormError from "../ui/FormError";
 import { emailValidationRegex } from "../utilities/utilities";
+import SubmitButton from "../ui/SubmitButton";
+import CancelButton from "../ui/CancelButton";
+import InputDiv from "../ui/InputDiv";
+import FormContainer from "../ui/FormContainer";
+import ButtonRow from "../ui/ButtonRow";
 
 function SignUp() {
   const { register, handleSubmit, formState, getValues, reset } = useForm();
@@ -14,8 +17,6 @@ function SignUp() {
   const { signUp, isLoading } = useSignUp();
 
   function submitFunc(data) {
-    //console.log(data);
-
     if (!errors.length) {
       const { email, password, firstName, lastName } = data;
 
@@ -32,56 +33,54 @@ function SignUp() {
         },
       );
     } else {
+      console.log(errors);
       return errors;
     }
   }
 
   return (
-    <form onSubmit={handleSubmit(submitFunc)}>
-      <div className="flex flex-col items-center justify-center">
-        <div className="inputDiv">
-          <label htmlFor="firstName">First Name</label>
-          <div className="flex flex-col">
+    <>
+      <h2 className="mb-5 text-center">Sign Up</h2>
+
+      <form onSubmit={handleSubmit(submitFunc)}>
+        <FormContainer>
+          <InputDiv
+            labelFor="firstName"
+            label="First Name"
+            error={errors?.firstName?.message}
+          >
             <input
               id="firstName"
               type="text"
               required
               {...register("firstName", {
                 required: true,
-                minLength: {
-                  value: 2,
-                  message: "You must provide at least 2 characters",
-                },
               })}
               disabled={isLoading}
             />
-            <FormError message={errors?.email?.message} />
-          </div>
-        </div>
+          </InputDiv>
 
-        <div className="inputDiv">
-          <label htmlFor="lastName">Last Name</label>
-          <div className="flex flex-col">
+          <InputDiv
+            labelFor="lastName"
+            label="Last Name"
+            error={errors?.lastName?.message}
+          >
             <input
               id="lastName"
               type="text"
               required
               {...register("lastName", {
                 required: true,
-                minLength: {
-                  value: 2,
-                  message: "You must provide at least 2 characters",
-                },
               })}
               disabled={isLoading}
             />
-            <FormError message={errors?.email?.message} />
-          </div>
-        </div>
+          </InputDiv>
 
-        <div className="inputDiv">
-          <label htmlFor="email">Email</label>
-          <div className="flex flex-col">
+          <InputDiv
+            labelFor="email"
+            label="Email"
+            error={errors?.email?.message}
+          >
             <input
               id="email"
               type="email"
@@ -95,13 +94,13 @@ function SignUp() {
               })}
               disabled={isLoading}
             />
-            <FormError message={errors?.email?.message} />
-          </div>
-        </div>
+          </InputDiv>
 
-        <div className="inputDiv">
-          <label htmlFor="password">Password</label>
-          <div className="flex flex-col">
+          <InputDiv
+            labelFor="password"
+            label="Password"
+            error={errors?.password?.message}
+          >
             <input
               id="password"
               type="password"
@@ -115,13 +114,13 @@ function SignUp() {
               })}
               disabled={isLoading}
             />
-            <FormError message={errors?.password?.message} />
-          </div>
-        </div>
+          </InputDiv>
 
-        <div className="inputDiv">
-          <label htmlFor="confirmPassword">Confirm Password</label>
-          <div className="flex flex-col">
+          <InputDiv
+            labelFor="confirmPassword"
+            label="Confirm Password"
+            error={errors?.confirmPassword?.message}
+          >
             <input
               id="confirmPassword"
               type="password"
@@ -133,21 +132,22 @@ function SignUp() {
               })}
               disabled={isLoading}
             />
-            <FormError message={errors?.confirmPassword?.message} />
-          </div>
-        </div>
+          </InputDiv>
 
-        <div className="inputDiv">
-          <Button disabled={isLoading} type="primary" size="normal">
-            Sign Up
-          </Button>
-        </div>
+          <ButtonRow>
+            <SubmitButton isLoading={isLoading}>Sign Up</SubmitButton>
+            <CancelButton isLoading={isLoading} onClick={reset} />
+          </ButtonRow>
 
-        <div className="mt-10">
-          Already a member? <Link to="/sigin">Sign In</Link>
-        </div>
-      </div>
-    </form>
+          <ButtonRow>
+            Already a member?{" "}
+            <Link to="/signin" className="caret">
+              Sign In
+            </Link>
+          </ButtonRow>
+        </FormContainer>
+      </form>
+    </>
   );
 }
 

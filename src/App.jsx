@@ -3,12 +3,14 @@ import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DarkModeProvider } from "./context/DarkModeContex";
 import { EventFilterProvider } from "./context/EventFilterContext";
+import ProtectedRoute from "./ui/ProtectedRoute";
 import AppLayout from "./ui/AppLayout";
 import NotFound from "./ui/NotFound";
 import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Dashboard from "./pages/Dashboard";
+import AddEvent from "./pages/AddEvent";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,13 +30,20 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <Routes>
+              {/* Shared layout for all pages */}
               <Route element={<AppLayout />}>
+                {/* Public pages */}
                 <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Navigate to="/" replace />} />
-                <Route path="*" element={<NotFound />} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="*" element={<NotFound />} />
+
+                {/* Protected wrapper */}
+                <Route element={<ProtectedRoute />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/addevent" element={<AddEvent />} />
+                </Route>
               </Route>
             </Routes>
             <Toaster />

@@ -7,19 +7,17 @@ export async function signUp({ email, password, firstName, lastName }) {
     password,
     options: {
       data: {
-        firstName,
-        lastName
-      },
-    },
+        firstName: firstName,
+        lastName: lastName
+      }
+    }
   });
 
   if (error) {
-    console.error(error.message);
     throw new Error(error.message);
 
   }
 
-  console.log('data returned by signUp API:', data)
   return data;
 }
 
@@ -35,12 +33,17 @@ export async function signIn({ email, password }) {
     throw new Error(error.message);
   }
 
-  console.log('data returned by signIn API:', data)
   return data;
 }
 
 
-export async function getUser() {
+export async function getCurrentUser() {
+  const { data: session } = await supabase.auth.getSession();
+
+  if (!session.session) {
+    return null; //no auth'd user
+  }
+
   const { data: { user }, error } = await supabase.auth.getUser();
 
   if (error) {
@@ -48,6 +51,18 @@ export async function getUser() {
     throw new Error(error.message);
   }
 
-  console.log('data returned by getUSER api:', user)
   return user;
+}
+
+
+export async function signOut() {
+  let { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error(error.message);
+    throw new Error(error.message);
+  }
+
+  return;
+
 }

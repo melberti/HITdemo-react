@@ -26,7 +26,7 @@ function EventsGrid() {
   if (!events) return <NoEventsFound />;
 
   return (
-    <ul className="mt-5 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <ul className="mt-5 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {displayEvents?.map((event) => (
         <EventGridItem event={event} key={event.id} />
       ))}

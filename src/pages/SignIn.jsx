@@ -1,8 +1,13 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import { toast } from "react-hot-toast";
-import Button from "../ui/Button";
 import { useSignIn } from "../features/authentication/useSignIn";
+import { emailValidationRegex } from "../utilities/utilities";
+import SubmitButton from "../ui/SubmitButton";
+import CancelButton from "../ui/CancelButton";
+import InputDiv from "../ui/InputDiv";
+import FormContainer from "../ui/FormContainer";
+import ButtonRow from "../ui/ButtonRow";
 
 function SignIn() {
   const { register, handleSubmit, formState, reset } = useForm();
@@ -30,22 +35,34 @@ function SignIn() {
 
   return (
     <>
-      <h3 className="mb-5 text-center">Sign In</h3>
+      <h2 className="mb-5 text-center">Sign In</h2>
       <form onSubmit={handleSubmit(submitFunc)}>
-        <div className="flex flex-col items-center justify-center">
-          <div className="inputDiv">
-            <label htmlFor="email">Email</label>
+        <FormContainer>
+          <InputDiv
+            labelFor="email"
+            label="Email"
+            error={errors?.email?.message}
+          >
             <input
               id="email"
               type="email"
               required
-              {...register("email", { required: true })}
+              {...register("email", {
+                required: true,
+                pattern: {
+                  value: emailValidationRegex,
+                  message: "Invalid email",
+                },
+              })}
               disabled={isLoading}
             />
-            {errors?.email}
-          </div>
-          <div className="inputDiv">
-            <label htmlFor="password">Password</label>
+          </InputDiv>
+
+          <InputDiv
+            labelFor="password"
+            label="Password"
+            error={errors?.password?.message}
+          >
             <input
               id="password"
               type="password"
@@ -54,16 +71,20 @@ function SignIn() {
               disabled={isLoading}
             />
             {errors?.password}
-          </div>
+          </InputDiv>
 
-          <div className="inputDiv">
-            <Button disabled={isLoading}>Sign In</Button>
-          </div>
+          <ButtonRow>
+            <SubmitButton isLoading={isLoading}>Sign In</SubmitButton>
+            <CancelButton isLoading={isLoading} onClick={reset} />
+          </ButtonRow>
 
-          <div className="mt-10">
-            Not a member yet? <Link to="/signup">Sign Up</Link>
-          </div>
-        </div>
+          <ButtonRow>
+            Not a member yet?{" "}
+            <Link to="/signup" className="caret">
+              Sign Up
+            </Link>
+          </ButtonRow>
+        </FormContainer>
       </form>
     </>
   );
