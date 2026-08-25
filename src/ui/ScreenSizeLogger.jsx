@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function ScreenSizeLogger() {
+export default function ScreenSizeLogger({ show }) {
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -23,9 +23,10 @@ export default function ScreenSizeLogger() {
 
       setWindowSize({ width, height });
 
-      console.log(
-        `Width: ${width}px, Height: ${height}px | Tailwind: ${getTailwindBreakpoint(width)}`,
-      );
+      show &&
+        console.log(
+          `Width: ${width}px, Height: ${height}px | Tailwind: ${getTailwindBreakpoint(width)}`,
+        );
     };
 
     // Log initial size on mount
@@ -35,6 +36,7 @@ export default function ScreenSizeLogger() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  if (!show) return null;
   return (
     <div className="p-6 text-center">
       <p className="text-lg font-medium">

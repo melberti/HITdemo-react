@@ -1,8 +1,8 @@
 import Button from "./Button";
 
-function SubmitButton({ isLoading, children }) {
+function SubmitButton({ disabled, children }) {
   return (
-    <Button disabled={isLoading} type="primary" size="normal">
+    <Button disabled={disabled} color="primary" size="normal">
       {children}
     </Button>
   );

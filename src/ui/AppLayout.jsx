@@ -5,11 +5,11 @@ import Logo from "./Logo";
 
 function AppLayout() {
   return (
-    <div className="flex h-screen w-full flex-col">
+    <div>
       <Header />
       <Logo />
 
-      <main className="h-dvh grow px-5 py-7">
+      <main className="grow px-5 py-7">
         <Outlet />
       </main>
       <Footer />

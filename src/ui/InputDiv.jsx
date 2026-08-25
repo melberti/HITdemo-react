@@ -1,12 +1,14 @@
 import FormError from "./FormError";
 
-function InputDiv({ label, labelFor, children, error }) {
+function InputDiv({ label, labelFor, error, required = false, children }) {
   return (
     <div className="inputDiv">
-      <label htmlFor={labelFor}>{label}</label>
+      <label htmlFor={labelFor} className={required ? "required" : ""}>
+        {label}
+      </label>
       <div className="flex flex-col">
         {children}
-        {error && <FormError message={error} />}
+        {error !== undefined && <FormError message={error} />}
       </div>
     </div>
   );

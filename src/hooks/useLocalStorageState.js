@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 //accept initial value and key to store
+//using this for dark mode setting
 export function useLocalStorageState(initialValue, key) {
   //define a callback function as initial value
   //try to get the key value from storage and return either it or default value

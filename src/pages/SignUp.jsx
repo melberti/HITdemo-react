@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router";
 import { useSignUp } from "../features/authentication/useSignup";
 import { emailValidationRegex } from "../utilities/utilities";
 import SubmitButton from "../ui/SubmitButton";
-import CancelButton from "../ui/CancelButton";
+import ResetButton from "../ui/ResetButton";
 import InputDiv from "../ui/InputDiv";
 import FormContainer from "../ui/FormContainer";
 import ButtonRow from "../ui/ButtonRow";
@@ -135,8 +135,8 @@ function SignUp() {
           </InputDiv>
 
           <ButtonRow>
-            <SubmitButton isLoading={isLoading}>Sign Up</SubmitButton>
-            <CancelButton isLoading={isLoading} onClick={reset} />
+            <SubmitButton disabled={isLoading}>Sign Up</SubmitButton>
+            <ResetButton disabled={isLoading} onClick={reset} />
           </ButtonRow>
 
           <ButtonRow>

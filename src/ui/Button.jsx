@@ -1,15 +1,27 @@
-function Button({ size = "normal", type = "primary", onClick, children }) {
+function Button({
+  size = "normal",
+  color = "primary",
+  onClick,
+  children,
+  type = "submit",
+}) {
   const sizeClass = size === "small" ? "small" : "normal";
-  const typeClass =
-    type === "neutral"
+  const colorClass =
+    color === "neutral"
       ? "neutral"
-      : type === "secondary"
+      : color === "secondary"
         ? "secondary"
         : "primary";
-  const className = `${typeClass} ${sizeClass}`;
+  const className = `${colorClass} ${sizeClass}`;
 
   return (
-    <button className={className} onClick={onClick}>
+    <button
+      type={type}
+      className={className}
+      onClick={() => {
+        onClick?.();
+      }}
+    >
       {children}
     </button>
   );

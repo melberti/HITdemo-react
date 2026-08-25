@@ -1,48 +1,56 @@
 import { useForm } from "react-hook-form";
 import { urlValidationRegex } from "../utilities/utilities";
+import { useCategory } from "../features/event/useCategory";
 import FormContainer from "../ui/FormContainer";
 import InputDiv from "../ui/InputDiv";
 import SubmitButton from "../ui/SubmitButton";
-import CancelButton from "../ui/CancelButton";
+import ResetButton from "../ui/ResetButton";
 import ButtonRow from "../ui/ButtonRow";
 
 function AddEvent() {
   const { register, handleSubmit, reset, getValues, formState } = useForm();
   const { errors } = formState;
 
+  const { categories, isLoading: isLoadingCategories } = useCategory();
+  //TODO: save event
+
   //to be replaced with use method
   const { isLoading } = false;
 
   function submitFunc(data) {
-    if (!errors.length) {
-      const {
-        title,
-        description,
-        eventDate,
-        eventTime,
-        image,
-        categoryId,
-        venueId,
-        eventUrl,
-        cost,
-      } = data;
+    const {
+      title,
+      description,
+      eventDate,
+      eventStartTime,
+      eventEndTime,
+      // image,
+      // categoryId,
+      // venueId,
+      eventUrl,
+      cost,
+    } = data;
 
-      console.log(
-        title,
-        description,
-        eventDate,
-        eventTime,
-        image,
-        categoryId,
-        venueId,
-        eventUrl,
-        cost,
-      );
+    console.log(
+      "submitted:",
+      title,
+      description,
+      eventDate,
+      StartTime,
+      eventEndTime,
+      // image,
+      // categoryId,
+      // venueId,
+      eventUrl,
+      cost,
+    );
 
-      console.log("data", data);
-    } else {
-      console.log("errors", errors);
-    }
+    // if (!errors.length) {
+    //   console.log("data", data);
+    // } else {
+    //   console.log("errors", errors);
+    //   return errors;
+    // }
   }
 
   return (
@@ -54,49 +62,79 @@ function AddEvent() {
             label="Event Title"
             labelFor="title"
             error={errors?.title?.message}
+            required={true}
           >
             <input
               type="text"
               id="title"
-              {...register("title", { required: true })}
+              name="title"
+              {...register("title", { required: "Required" })}
+              disabled={isLoading}
             />
           </InputDiv>
           <InputDiv
             label="Description"
             labelFor="description"
             error={errors?.description?.message}
+            required={true}
+          >
+            <textarea
+              rows={5}
+              columns={100}
+              id="description"
+              {...register("description", {
+                required: "Required",
+              })}
+              disabled={isLoading}
+            />
+          </InputDiv>
+
+          <InputDiv
+            label="Event Date"
+            labelFor="eventDate"
+            error={errors?.eventDate?.message}
+            required={true}
           >
             <input
-              type="textbox"
-              width={200}
-              height={100}
-              id="description"
-              {...register("description", { required: true })}
+              type="date"
+              id="eventDate"
+              className="datetime"
+              {...register("eventDate", {
+                required: "Required",
+              })}
+              disabled={isLoading}
             />
           </InputDiv>
           <InputDiv
             className="ml-2 flex flex-nowrap justify-items-start gap-3"
-            label="Date and Time"
-            labelFor="eventDate"
+            label="Start and End Time"
+            labelFor="eventStartTime"
+            required={true}
             error={
-              errors?.eventDate?.message
-                ? errors?.eventDate?.message
-                : errors?.eventTime?.message && errors?.eventTime.message
+              errors?.eventStartTime?.message
+                ? errors?.eventStartTime?.message
+                : errors?.eventEndTime?.message && errors?.eventEndTime.message
             }
           >
             <span className="ml-2 flex flex-nowrap justify-items-start gap-1">
               <input
-                type="date"
-                id="eventDate"
+                type="time"
+                id="eventStartTime"
                 className="datetime"
-                {...register("eventDate", { required: true })}
+                {...register("eventStartTime", {
+                  required: "Both start and end times are required",
+                })}
+                disabled={isLoading}
               />
-
+              <span className="pt-1">to</span>
               <input
                 type="time"
-                id="eventTime"
+                id="eventEndTime"
                 className="datetime"
-                {...register("eventTime", { required: true })}
+                {...register("eventEndTime", {
+                  required: "Both start and end times are required",
+                })}
+                disabled={isLoading}
               />
             </span>
           </InputDiv>
@@ -104,15 +142,18 @@ function AddEvent() {
           <ul>
             <li>select categoryId</li>
             <li>select venueId</li>
-            <li>select organizerId</li>
             <li>upload image</li>
           </ul>
 
-          <InputDiv label="Event URL" labelFor="eventUrl">
+          <InputDiv
+            label="Event URL"
+            labelFor="eventUrl"
+            error={errors?.eventUrl?.message}
+          >
             <input
               type="text"
               id="eventUrl"
-              error={errors?.eventUrl?.message}
+              disabled={isLoading}
               {...register("eventUrl", {
                 required: false,
                 pattern: {
@@ -123,19 +164,32 @@ function AddEvent() {
             />
           </InputDiv>
 
-          <InputDiv label="Event Cost (0 for free)" labelFor="cost">
+          <InputDiv
+            label="Event Cost"
+            labelFor="cost"
+            error={errors?.cost?.message}
+            required={true}
+          >
             <input
-              type="number"
+              type="text"
               id="cost"
               defaultValue={0}
-              error={errors?.cost?.message}
-              {...register("cost", { required: true })}
+              placeholder="Enter 0 for FREE"
+              disabled={isLoading}
+              {...register("cost", {
+                required: "Required",
+                valueAsNumber: true,
+                validate: (value) =>
+                  !isNaN(value) || "Please enter a valid number",
+                min: { value: 0, message: "Cost cannot be negative" },
+                max: { value: 1000, message: "Cost cannot be more than 1000" },
+              })}
             />
           </InputDiv>
 
           <ButtonRow>
-            <SubmitButton isLoading={isLoading}>Submit Event</SubmitButton>
-            <CancelButton isLoading={isLoading} onClick={reset} />
+            <SubmitButton disabled={isLoading}>Submit Event</SubmitButton>
+            <ResetButton disabled={isLoading} onClick={reset} />
           </ButtonRow>
         </FormContainer>
       </form>

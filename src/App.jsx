@@ -11,6 +11,7 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Dashboard from "./pages/Dashboard";
 import AddEvent from "./pages/AddEvent";
+import AddVenue from "./pages/AddVenue";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,6 +44,7 @@ function App() {
                 <Route element={<ProtectedRoute />}>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/addevent" element={<AddEvent />} />
+                  <Route path="/addvenue" element={<AddVenue />} />
                 </Route>
               </Route>
             </Routes>

@@ -20,7 +20,7 @@ function EventsFilter() {
         value={filter}
         onChange={(e) => handleChange(e)}
       />
-      <Button type="neutral" onClick={() => setFilter("")}>
+      <Button color="neutral" onClick={() => setFilter("")}>
         Reset
       </Button>
     </div>

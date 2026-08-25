@@ -1,6 +1,6 @@
+import { useNavigate, Link } from "react-router";
 import { CgDarkMode } from "react-icons/cg";
 import { useDarkMode } from "../context/DarkModeContex";
-import { useNavigate } from "react-router";
 import { useUser } from "../features/authentication/useUser";
 import { useSignOut } from "../features/authentication/useSignOut";
 import Button from "./Button";
@@ -15,7 +15,7 @@ function Header() {
   return (
     <header>
       <div>
-        <ScreenSizeLogger />
+        <ScreenSizeLogger show={false} />
       </div>
       <div className="m-0 p-0" title="Toggle DarkMode">
         <CgDarkMode size={40} onClick={toggleDarkMode} />
@@ -23,13 +23,22 @@ function Header() {
 
       {user ? (
         <>
-          <div>{user.user_metadata.firstName}</div>
-          <Button size="small" type="primary" onClick={signOut}>
+          <div>Welcome, {user.user_metadata.firstName}!</div>
+          <div>
+            <Link to="/dashboard" className="dashboard">
+              View Dashboard
+            </Link>
+          </div>
+          <Button size="small" color="primary" onClick={signOut}>
             Sign Out
           </Button>
         </>
       ) : (
-        <Button size="small" type="primary" onClick={() => navigate("/signin")}>
+        <Button
+          size="small"
+          color="primary"
+          onClick={() => navigate("/signin")}
+        >
           Sign In
         </Button>
       )}

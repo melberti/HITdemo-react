@@ -29,10 +29,13 @@ Tailwind builds CSS in this order:
 @layer base {
   html,
   body,
-  #root,
-  .container {
-    @apply w-full;
+  #root {
+    @apply flex min-h-screen w-full flex-col;
     font-family: var(--font-HIT);
+  }
+
+  main {
+    @apply flex-1;
   }
 
   h1 {
@@ -49,8 +52,16 @@ Tailwind builds CSS in this order:
     @apply pt-2;
   }
 
-  input {
-    @apply w-xs rounded-md border border-stone-200 px-2 py-1 text-base shadow-inner placeholder:text-stone-400 focus:outline-none;
+  input,
+  select,
+  textarea {
+    @apply w-xs rounded-md border border-stone-200 px-2 py-1 text-base shadow-inner placeholder:text-stone-400 focus:ring-2 focus:ring-neutral-300;
+  }
+
+  input::selection,
+  textarea::selection,
+  select:focus-visible {
+    @apply bg-orange-300;
   }
 
   label {
@@ -67,11 +78,12 @@ Tailwind builds CSS in this order:
 
   button,
   .button {
-    @apply inline w-auto rounded-md border border-neutral-100 text-nowrap text-neutral-100 shadow-inner focus:ring focus:outline-none active:bg-stone-300 disabled:cursor-not-allowed;
+    @apply inline w-auto rounded-md border border-neutral-100 text-nowrap text-neutral-100 shadow-inner focus:ring-2 focus:ring-neutral-300 active:bg-stone-300 disabled:cursor-not-allowed;
   }
 
   select,
-  input {
+  input,
+  textarea {
     font-weight: 400;
     font-family: var(--font-HIT);
     outline: none;
@@ -178,6 +190,11 @@ Tailwind builds CSS in this order:
   a.button {
     @apply pt-1 text-neutral-100;
   }
+
+  a.dashboard {
+    color: white;
+    text-decoration: underline;
+  }
 }
 
 /* no @layer at all when writing one‑off utility compositions that don’t need ordering guarantees. */
@@ -224,4 +241,19 @@ h2.descriptor {
 
 .datetime {
   width: 150px !important;
+}
+
+label.required::after {
+  content: "*";
+  margin-left: 1px;
+  @apply text-red-700;
+}
+
+.contents > div {
+  @apply bg-white p-1 text-sm;
+}
+
+.tableHeading > div {
+  @apply font-bold text-black;
+  background-color: rgb(from var(--primary-pink) r g b / 0.5);
 }
