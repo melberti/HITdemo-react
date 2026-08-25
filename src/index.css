@@ -30,7 +30,7 @@ Tailwind builds CSS in this order:
   html,
   body,
   #root {
-    @apply flex min-h-screen w-full flex-col;
+    @apply flex min-h-screen w-full flex-col text-neutral-600;
     font-family: var(--font-HIT);
   }
 
@@ -200,8 +200,27 @@ Tailwind builds CSS in this order:
 /* no @layer at all when writing one‑off utility compositions that don’t need ordering guarantees. */
 /* dark-mode overrides using raw CSS */
 /* animations */
-.icon {
-  @apply mr-2 inline text-(--primary-pink);
+.icon,
+.postponed,
+.cancelled {
+  @apply mr-2 mb-1 inline text-(--primary-pink);
+}
+
+.postponed,
+.cancelled {
+  @apply font-semibold;
+}
+
+.postponed {
+  @apply text-yellow-500;
+}
+
+.cancelled {
+  @apply: text-red-700;
+}
+
+.delayedOrCancelled {
+  @apply opacity-40;
 }
 
 .dark .filter {
@@ -256,4 +275,18 @@ label.required::after {
 .tableHeading > div {
   @apply font-bold text-black;
   background-color: rgb(from var(--primary-pink) r g b / 0.5);
+}
+
+input[type="file"] {
+  margin-left: 3px;
+  border: none;
+  box-shadow: none;
+
+  &::file-selector-button {
+    @apply ml-0 inline h-6 w-auto rounded-md border border-neutral-100 bg-(--primary-pink) px-1 py-1 text-sm text-nowrap text-neutral-100 shadow-inner focus:ring-2 focus:ring-neutral-300 active:bg-stone-300 disabled:cursor-not-allowed md:h-8 md:px-4 md:text-base;
+
+    &:hover {
+      background-color: var(--primary-pink);
+    }
+  }
 }

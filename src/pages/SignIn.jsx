@@ -15,8 +15,6 @@ function SignIn() {
   const { signIn, isLoading } = useSignIn();
 
   function submitFunc(data) {
-    //console.log(data);
-
     if (!errors.length) {
       const { email, password } = data;
       signIn(

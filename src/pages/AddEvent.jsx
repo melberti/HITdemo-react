@@ -1,57 +1,65 @@
 import { useForm } from "react-hook-form";
 import { urlValidationRegex } from "../utilities/utilities";
 import { useCategory } from "../features/event/useCategory";
+import { useAddEvent } from "../features/event/useAddEvent";
+import { useMyVenues } from "../features/venue/useMyVenues";
 import FormContainer from "../ui/FormContainer";
 import InputDiv from "../ui/InputDiv";
 import SubmitButton from "../ui/SubmitButton";
 import ResetButton from "../ui/ResetButton";
 import ButtonRow from "../ui/ButtonRow";
+import SelectBox from "../ui/SelectBox";
+import Spinner from "../ui/Spinner";
 
 function AddEvent() {
   const { register, handleSubmit, reset, getValues, formState } = useForm();
   const { errors } = formState;
 
   const { categories, isLoading: isLoadingCategories } = useCategory();
+  const { venues, isLoading: isLoadingVenues } = useMyVenues();
+  const { addEvent, isAdding } = useAddEvent();
   //TODO: save event
 
   //to be replaced with use method
   const { isLoading } = false;
 
   function submitFunc(data) {
+    //modify the image property to get what we really need
+    //data.image[0] for newly uploaded
+    //string for existing without change
+    const image = typeof data.image === "string" ? data.image : data.image[0];
+
     const {
       title,
       description,
       eventDate,
       eventStartTime,
       eventEndTime,
-      // image,
-      // categoryId,
-      // venueId,
+      categoryId,
+      venueId,
       eventUrl,
       cost,
     } = data;
 
-    console.log(
-      "submitted:",
-      title,
-      description,
-      eventDate,
-      StartTime,
-      eventEndTime,
-      // image,
-      // categoryId,
-      // venueId,
-      eventUrl,
-      cost,
-    );
-
-    // if (!errors.length) {
-    //   console.log("data", data);
-    // } else {
-    //   console.log("errors", errors);
-    //   return errors;
-    // }
+    if (!errors.length) {
+      addEvent({
+        title,
+        description,
+        eventDate,
+        eventStartTime,
+        eventEndTime,
+        image,
+        categoryId,
+        venueId,
+        eventUrl,
+        cost,
+      });
+    } else {
+      return errors;
+    }
   }
+
+  if (isLoadingCategories || isLoadingVenues) return <Spinner />;
 
   return (
     <>
@@ -69,7 +77,7 @@ function AddEvent() {
               id="title"
               name="title"
               {...register("title", { required: "Required" })}
-              disabled={isLoading}
+              disabled={isAdding}
             />
           </InputDiv>
           <InputDiv
@@ -85,7 +93,45 @@ function AddEvent() {
               {...register("description", {
                 required: "Required",
               })}
-              disabled={isLoading}
+              disabled={isAdding}
+            />
+          </InputDiv>
+
+          <InputDiv
+            label="Category"
+            labelFor="categoryId"
+            error={errors?.categoryId?.message}
+            required={true}
+          >
+            <SelectBox
+              options={categories}
+              keyName="id"
+              valueKeyName="id"
+              textKeyName="value"
+              isRequired={true}
+              labelFor="categoryId"
+              isNumericValue={true}
+              register={register}
+              disabled={isAdding}
+            />
+          </InputDiv>
+
+          <InputDiv
+            label="Venue"
+            labelFor="venueId"
+            error={errors?.venueId?.message}
+            required={true}
+          >
+            <SelectBox
+              options={venues}
+              keyName="id"
+              valueKeyName="id"
+              textKeyName="name"
+              isRequired={true}
+              labelFor="venueId"
+              isNumericValue={true}
+              register={register}
+              disabled={isAdding}
             />
           </InputDiv>
 
@@ -102,7 +148,7 @@ function AddEvent() {
               {...register("eventDate", {
                 required: "Required",
               })}
-              disabled={isLoading}
+              disabled={isAdding}
             />
           </InputDiv>
           <InputDiv
@@ -116,7 +162,7 @@ function AddEvent() {
                 : errors?.eventEndTime?.message && errors?.eventEndTime.message
             }
           >
-            <span className="ml-2 flex flex-nowrap justify-items-start gap-1">
+            <span className="ml-0 flex flex-nowrap justify-items-start gap-1">
               <input
                 type="time"
                 id="eventStartTime"
@@ -124,7 +170,7 @@ function AddEvent() {
                 {...register("eventStartTime", {
                   required: "Both start and end times are required",
                 })}
-                disabled={isLoading}
+                disabled={isAdding}
               />
               <span className="pt-1">to</span>
               <input
@@ -134,16 +180,10 @@ function AddEvent() {
                 {...register("eventEndTime", {
                   required: "Both start and end times are required",
                 })}
-                disabled={isLoading}
+                disabled={isAdding}
               />
             </span>
           </InputDiv>
-
-          <ul>
-            <li>select categoryId</li>
-            <li>select venueId</li>
-            <li>upload image</li>
-          </ul>
 
           <InputDiv
             label="Event URL"
@@ -153,7 +193,7 @@ function AddEvent() {
             <input
               type="text"
               id="eventUrl"
-              disabled={isLoading}
+              disabled={isAdding}
               {...register("eventUrl", {
                 required: false,
                 pattern: {
@@ -175,7 +215,7 @@ function AddEvent() {
               id="cost"
               defaultValue={0}
               placeholder="Enter 0 for FREE"
-              disabled={isLoading}
+              disabled={isAdding}
               {...register("cost", {
                 required: "Required",
                 valueAsNumber: true,
@@ -185,6 +225,26 @@ function AddEvent() {
                 max: { value: 1000, message: "Cost cannot be more than 1000" },
               })}
             />
+          </InputDiv>
+
+          <InputDiv
+            label="Image"
+            labelFor="image"
+            error={errors?.image?.message}
+            required={false}
+          >
+            <input
+              type="file"
+              id="image"
+              accept="image/*"
+              disabled={isAdding}
+              {...register("image", {
+                required: false,
+              })}
+            />
+            <span className="ml-2 text-sm text-neutral-500">
+              A default image will be used if none is uploaded
+            </span>
           </InputDiv>
 
           <ButtonRow>

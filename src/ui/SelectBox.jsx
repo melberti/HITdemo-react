@@ -31,14 +31,9 @@ function SelectBox({
         validate: (value) => {
           if (isNumericValue) {
             // Regex checking if the value contains only digits (optional negative sign)
-            const isInteger = /^-?\d+$/.test(value);
-            if (!isInteger) return "Value must be numeric";
-
-            if (value < minNumericValue)
-              return `Value must be at least ${minNumericValue}`;
-            if (value > maxNumericValue)
-              return `Value must be no more than ${maxNumericValue}`;
-          }
+            if (value === "0") return "You must select a value";
+          } else if (isRequired && value === "")
+            return "You must select a value";
           return true; //if not numeric or numeric validation passed
         },
       })}

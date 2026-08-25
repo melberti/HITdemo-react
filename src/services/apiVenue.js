@@ -3,7 +3,6 @@ import { useUser } from "../features/authentication/useUser";
 
 export async function addVenue({ name, address1, city, state, zipCode, url, phone }) {
 
-    console.log('api add venue', name, address1, city, state, zipCode, url, phone);
     const { data, error } = await supabase
         .from('venue')
         .insert({ name, address1, city, state, zipCode, url, phone })
