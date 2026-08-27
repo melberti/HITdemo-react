@@ -14,7 +14,7 @@ function EventDashboard() {
   return (
     <div className="mt-10 grid grid-cols-7 gap-1 bg-neutral-200 p-1">
       <div className="col-span-7 bg-[var(--primary-orange)] p-1 text-center text-white">
-        {events.length} EVENTS
+        {events.length} EVENT{events.length > 1 && "S"}
       </div>
 
       <EventDashboardList events={events} />

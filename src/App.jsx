@@ -12,6 +12,7 @@ import SignIn from "./pages/SignIn";
 import Dashboard from "./pages/Dashboard";
 import AddEvent from "./pages/AddEvent";
 import AddVenue from "./pages/AddVenue";
+import AddImage from "./pages/AddImage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,6 +46,7 @@ function App() {
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/addevent" element={<AddEvent />} />
                   <Route path="/addvenue" element={<AddVenue />} />
+                  <Route path="/addimage" element={<AddImage />} />
                 </Route>
               </Route>
             </Routes>

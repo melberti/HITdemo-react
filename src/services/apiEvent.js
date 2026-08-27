@@ -1,5 +1,6 @@
 import supabase from "./supabase";
 import { supabaseUrl } from "./supabase";
+import { getExtension } from "../utilities/utilities";
 
 export async function getEventsCurrent() {
 
@@ -76,6 +77,7 @@ export async function addEvent({
 
   //url for manually uploaded file will look like so:
   //  https://nsribrvbkekkkanclndt.supabase.co/storage/v1/object/public/eventImages/IMAGENAME.png
+  // ${eventImageBaseUrl}IMAGENAME.png
 
   //we will override the image value with the image path when creating the event itself
   //make imagePath unique with random prefix; we need the URL for this
@@ -83,6 +85,14 @@ export async function addEvent({
 
   //check the image object; a new image will yield a FileList,
   //while an edit without changing/uploading new file with yield a path
+
+  function setImageName(imageName) {
+    const ext = getExtension(imageName);
+    const baseName = imageName.replace(ext, "");
+
+    console.log(`${baseName.replace("/", "")}-${Math.random()}.${ext}`);
+  }
+
   const hasImagePath =
     typeof image === "string" && image?.startsWith(supabaseUrl);
 
@@ -90,11 +100,12 @@ export async function addEvent({
   //we will just use the existing image value rather than concatenating
   const imageName = hasImagePath
     ? ""
-    : `${Math.random()}-${image.name.replace("/", "")}`;
+    : setImageName(image.name);
 
+  return false;
   const imagePath = hasImagePath
     ? image
-    : `${supabaseUrl}/storage/v1/object/public/eventImages/${imageName}`;
+    : `${eventImageBaseUrl}${imageName}`;
 
   //don't override the image object itself;
   //replace it in the mutate statement only
@@ -110,9 +121,10 @@ export async function addEvent({
 
     if (storageError) {
       console.error(storageError);
-      throw new Error("Image could not be uploaded; cabin not created");
+      throw new Error("Image could not be uploaded; event not created");
     }
 
+    //TODO: check this
     imgUrl = `${supabaseUrl}/storage/v1/object/public/${storageData.fullPath}`;
 
     if (imgUrl === imagePath) publicUrl = storageData.fullPath;

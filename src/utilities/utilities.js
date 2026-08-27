@@ -1,4 +1,4 @@
-import { supabaseUrl } from "../services/supabase";
+import { eventImageBaseUrl } from "../services/supabase";
 
 export const emailValidationRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -8,7 +8,7 @@ export const phoneValidationRegex = /[0-9]{3}-[0-9]{3}-[0-9]{4}/
 
 export const zipValidationRegex = /[0-9]{5}/;
 
-export const defaultImageUrl = `${supabaseUrl}/storage/v1/object/public/eventImages/NoImageProvided.png`;
+export const defaultImageUrl = `${eventImageBaseUrl}NoImageProvided.png`;
 
 export function formatPhoneNumber(value) {
     if (!value) return value;
@@ -22,3 +22,11 @@ export function formatPhoneNumber(value) {
     if (length < 7) return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
     return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
 };
+
+
+export function getExtension(filename) {
+    // console.log(filename);
+    // console.log(filename.lastIndexOf("."));
+    // return false;
+    return filename.slice((filename.lastIndexOf(".") >>> 0) + 1);
+}
