@@ -1,3 +1,5 @@
+import { HiOutlineCursorClick } from "react-icons/hi";
+
 import EventDashboardItem from "./EventDashboardItem";
 
 function EventDashboardList({ events }) {
@@ -9,7 +11,9 @@ function EventDashboardList({ events }) {
         <div>Venue</div>
         <div>Category</div>
         <div>Cost</div>
-        <div>URL</div>
+        <div>
+          Image <HiOutlineCursorClick size={18} className="inline" />
+        </div>
         <div>Postponed/Cancelled</div>
       </div>
       {events.map((event) => (

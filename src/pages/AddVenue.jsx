@@ -10,14 +10,22 @@ import FormContainer from "../ui/FormContainer";
 import ButtonRow from "../ui/ButtonRow";
 import SubmitButton from "../ui/SubmitButton";
 import ResetButton from "../ui/ResetButton";
+import Button from "../ui/Button";
 import InputDiv from "../ui/InputDiv";
 import SelectState from "../ui/SelectState";
+import { useNavigate } from "react-router";
 
 function AddVenue() {
   const { register, handleSubmit, formState, clearErrors, reset } = useForm();
   const { errors } = formState;
 
   const { isAdding, addVenue } = useAddVenue();
+
+  const navigate = useNavigate();
+
+  function close() {
+    navigate("/dashboard");
+  }
 
   function submitFunc(data) {
     if (!errors.length) {
@@ -168,6 +176,9 @@ function AddVenue() {
           <ButtonRow>
             <SubmitButton disabled={isAdding}>Submit Venue</SubmitButton>
             <ResetButton disabled={isAdding} onClick={reset} />
+            <Button color="neutral" disabled={isAdding} onClick={close}>
+              Cancel
+            </Button>
           </ButtonRow>
         </FormContainer>
       </form>

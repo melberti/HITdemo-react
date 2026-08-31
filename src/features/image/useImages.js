@@ -4,7 +4,7 @@ import { getImages } from "../../services/apiImage";
 export function useImages() {
     const { data: images, isLoading } = useQuery({
         queryFn: ({ signal }) => getImages({ signal }),
-        queryKey: "[images]"
+        queryKey: ["images"]
     })
 
     return { images, isLoading }

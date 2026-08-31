@@ -1,4 +1,4 @@
-export function formatWithDay(date) {
+export function formatWithLongDay(date) {
 
   const dateToFormat = new Date(date);
 
@@ -15,6 +15,7 @@ export function formatWithDay(date) {
   //console.log(formatted); // Outputs: "Tuesday, February 3, 2026" 
   return formatted;
 }
+
 
 export function formatShortDate(date) {
 
@@ -38,7 +39,7 @@ export function formatWithDayShortMonth(date) {
   const dateToFormat = new Date(date);
 
   const options = {
-    weekday: "long",
+    weekday: "short",
     month: "short",
     day: "numeric",
     year: "numeric",

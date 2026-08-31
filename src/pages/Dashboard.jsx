@@ -9,18 +9,10 @@ function Dashboard() {
 
   return (
     <>
-      <div className="flex gap-2">
-        <Button onClick={() => navigate("/addevent")}>Add Event</Button>
-        <Button onClick={() => navigate("/addvenue")} color="secondary">
-          Add Venue
-        </Button>
-        <Button onClick={() => navigate("/addimage")} color="secondary">
-          Add Image
-        </Button>
-      </div>
-      <ImageDashboard />
+      <Button onClick={() => navigate("/addevent")}>Add Event</Button>
       <EventDashboard />
       <VenueDashboard />
+      <ImageDashboard />
     </>
   );
 }

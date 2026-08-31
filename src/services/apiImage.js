@@ -13,6 +13,7 @@ export async function getMyImages({ signal }) {
 
     if (error) throw new Error(error.message)
 
+
     return data;
 
 }
@@ -31,7 +32,10 @@ export async function getImages({ signal }) {
 
 }
 
-export async function uploadImage(image) {
+export async function uploadImage({ image }) {
+
+
+    //we don't need isModal here
 
     //create unique imageName by appending random number and saving to user's own folder
     function setImageName(imageName) {
@@ -44,12 +48,12 @@ export async function uploadImage(image) {
     //get user ID  
     const { data: { user } } = await supabase.auth.getUser();
 
-    const imageName = setImageName(image.img.name);
+    const imageName = setImageName(image.name);
 
     //upload the image
     const { error: storageError, data: storageData } = await supabase.storage
         .from("eventImages")
-        .upload(imageName, image.img)
+        .upload(imageName, image)
 
     if (storageError) {
         console.error(storageError);
@@ -63,5 +67,5 @@ export async function uploadImage(image) {
     if (storageData.path !== imageName)
         throw new Error("Returned storage URL not matched to expected path")
 
-
+    return storageData;
 }

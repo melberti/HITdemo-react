@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { toast } from "react-hot-toast";
 import { useSignIn } from "../features/authentication/useSignIn";
 import { emailValidationRegex } from "../utilities/utilities";
+import Button from "../ui/Button";
 import SubmitButton from "../ui/SubmitButton";
 import ResetButton from "../ui/ResetButton";
 import InputDiv from "../ui/InputDiv";
@@ -29,6 +30,11 @@ function SignIn() {
     } else {
       return errors;
     }
+  }
+
+  //return to home when Cancel is clicked
+  function close() {
+    navigate("/");
   }
 
   return (
@@ -74,6 +80,13 @@ function SignIn() {
           <ButtonRow>
             <SubmitButton disabled={isLoading}>Sign In</SubmitButton>
             <ResetButton disabled={isLoading} onClick={reset} />
+            <Button
+              color="neutral"
+              disabled={isLoading}
+              onClick={() => close()}
+            >
+              Cancel
+            </Button>
           </ButtonRow>
 
           <ButtonRow>

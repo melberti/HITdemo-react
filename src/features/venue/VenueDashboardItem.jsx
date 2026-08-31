@@ -1,5 +1,5 @@
 import { formatPhoneNumber } from "../../utilities/utilities";
-import { formatWithDay } from "../../utilities/dateTimeFormats";
+import { formatWithLongDay } from "../../utilities/dateTimeFormats";
 
 function VenueDashboardItem({ venue }) {
   return (
@@ -12,7 +12,7 @@ function VenueDashboardItem({ venue }) {
       </div>
       <div>{formatPhoneNumber(venue.phone)}</div>
       <div>{venue.url}</div>
-      <div>{formatWithDay(venue.created_at)}</div>
+      <div>{formatWithLongDay(venue.created_at)}</div>
     </div>
   );
 }

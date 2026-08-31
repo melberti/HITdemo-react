@@ -30,3 +30,11 @@ export function getExtension(filename) {
     // return false;
     return filename.slice((filename.lastIndexOf(".") >>> 0) + 1);
 }
+
+export function getFilenameFromUrl(url, userId) {
+    if (url === null) return "";
+    const replace1 = url.replace(eventImageBaseUrl, "");
+    const replace2 = replace1.replace(`${userId}/`, "")
+    //return replace2 === "NULL" ? "" : replace2;
+    return replace2;
+}

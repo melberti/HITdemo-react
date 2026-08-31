@@ -5,6 +5,7 @@ import { formatShortDate } from "../../utilities/dateTimeFormats";
 function ImageDashboardItem({ image }) {
   const { user } = useUser();
   const myUserid = user.id;
+
   const imageUrl = `${eventImageBaseUrl}${myUserid}/${image.name}`;
 
   //console.log(image);

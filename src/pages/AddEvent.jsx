@@ -1,15 +1,22 @@
 import { useForm } from "react-hook-form";
-import { urlValidationRegex } from "../utilities/utilities";
+
+import { defaultImageUrl, urlValidationRegex } from "../utilities/utilities";
 import { useCategory } from "../features/event/useCategory";
 import { useAddEvent } from "../features/event/useAddEvent";
 import { useMyVenues } from "../features/venue/useMyVenues";
 import FormContainer from "../ui/FormContainer";
 import InputDiv from "../ui/InputDiv";
+import Button from "../ui/Button";
 import SubmitButton from "../ui/SubmitButton";
 import ResetButton from "../ui/ResetButton";
 import ButtonRow from "../ui/ButtonRow";
 import SelectBox from "../ui/SelectBox";
 import Spinner from "../ui/Spinner";
+import Modal from "../ui/Modal";
+import ImageUpload from "../features/image/ImageUpload";
+import ImageSelect from "../features/image/ImageSelect";
+import { useNavigate } from "react-router";
+import { useEventImage } from "../context/EventImageContext";
 
 function AddEvent() {
   const { register, handleSubmit, reset, getValues, formState } = useForm();
@@ -18,23 +25,23 @@ function AddEvent() {
   const { categories, isLoading: isLoadingCategories } = useCategory();
   const { venues, isLoading: isLoadingVenues } = useMyVenues();
   const { addEvent, isAdding } = useAddEvent();
-  //TODO: save event
 
-  //to be replaced with use method
-  const { isLoading } = false;
+  const { imageUrl, setImageUrl } = useEventImage();
+
+  const navigate = useNavigate();
+
+  function close() {
+    navigate("/dashboard");
+  }
 
   function submitFunc(data) {
-    //modify the image property to get what we really need
-    //data.image[0] for newly uploaded
-    //string for existing without change
-    const image = typeof data.image === "string" ? data.image : data.image[0];
-
     const {
       title,
       description,
       eventDate,
       eventStartTime,
       eventEndTime,
+      imageUrl,
       categoryId,
       venueId,
       eventUrl,
@@ -48,7 +55,7 @@ function AddEvent() {
         eventDate,
         eventStartTime,
         eventEndTime,
-        image,
+        imageUrl,
         categoryId,
         venueId,
         eventUrl,
@@ -57,6 +64,12 @@ function AddEvent() {
     } else {
       return errors;
     }
+  }
+
+  function selectImageClick(e) {
+    e.preventDefault();
+    setImageUrl("");
+    console.log("select your image");
   }
 
   if (isLoadingCategories || isLoadingVenues) return <Spinner />;
@@ -229,27 +242,82 @@ function AddEvent() {
 
           <InputDiv
             label="Image"
-            labelFor="image"
+            labelFor="imageUrl"
             error={errors?.image?.message}
             required={false}
           >
             <input
-              type="file"
-              id="image"
-              accept="image/*"
-              disabled={isAdding}
-              {...register("image", {
+              type="text"
+              id="imageUrl"
+              value={imageUrl}
+              {...register("imageUrl", {
                 required: false,
               })}
-            />
-            <span className="ml-2 text-sm text-neutral-500">
-              A default image will be used if none is uploaded
-            </span>
+            ></input>
+            <div className="ml-2 flex flex-nowrap justify-items-start gap-1">
+              {imageUrl ? (
+                <>
+                  <img
+                    src={imageUrl}
+                    width="120"
+                    alt={`${imageUrl} selected`}
+                    title={imageUrl}
+                    className="block"
+                  />
+                  <Button
+                    color="neutral"
+                    size="small"
+                    onClick={() => setImageUrl("")}
+                  >
+                    Remove Selection
+                  </Button>
+                </>
+              ) : (
+                <img
+                  src={defaultImageUrl}
+                  width="120"
+                  alt={`${defaultImageUrl} selected`}
+                  title={defaultImageUrl}
+                  className="block"
+                />
+              )}
+              {!imageUrl && (
+                <Modal>
+                  <div className="grid grid-cols-1">
+                    <Modal.Open opens="select">
+                      <Button
+                        color="secondary"
+                        size="small"
+                        type="button"
+                        onClick={(e) => selectImageClick(e)}
+                      >
+                        Select an image
+                      </Button>
+                    </Modal.Open>
+                    <Modal.Open opens="upload">
+                      <Button color="secondary" size="small">
+                        Upload an image
+                      </Button>
+                    </Modal.Open>
+                  </div>
+                  <Modal.Window name="select">
+                    <ImageSelect />
+                  </Modal.Window>
+
+                  <Modal.Window name="upload">
+                    <ImageUpload />
+                  </Modal.Window>
+                </Modal>
+              )}
+            </div>
           </InputDiv>
 
           <ButtonRow>
-            <SubmitButton disabled={isLoading}>Submit Event</SubmitButton>
-            <ResetButton disabled={isLoading} onClick={reset} />
+            <SubmitButton disabled={isAdding}>Submit Event</SubmitButton>
+            <ResetButton disabled={isAdding} onClick={reset} />
+            <Button color="neutral" disabled={isAdding} onClick={close}>
+              Cancel
+            </Button>
           </ButtonRow>
         </FormContainer>
       </form>

@@ -1,6 +1,4 @@
 import supabase from "./supabase";
-import { supabaseUrl } from "./supabase";
-import { getExtension } from "../utilities/utilities";
 
 export async function getEventsCurrent() {
 
@@ -67,7 +65,7 @@ export async function addEvent({
   eventDate,
   eventStartTime,
   eventEndTime,
-  image,
+  imageUrl,
   categoryId,
   venueId,
   eventUrl,
@@ -75,70 +73,6 @@ export async function addEvent({
 }) {
 
 
-  //url for manually uploaded file will look like so:
-  //  https://nsribrvbkekkkanclndt.supabase.co/storage/v1/object/public/eventImages/IMAGENAME.png
-  // ${eventImageBaseUrl}IMAGENAME.png
-
-  //we will override the image value with the image path when creating the event itself
-  //make imagePath unique with random prefix; we need the URL for this
-  //replace any slashes because supabase will create a folder structure based on slashes
-
-  //check the image object; a new image will yield a FileList,
-  //while an edit without changing/uploading new file with yield a path
-
-  function setImageName(imageName) {
-    const ext = getExtension(imageName);
-    const baseName = imageName.replace(ext, "");
-
-    console.log(`${baseName.replace("/", "")}-${Math.random()}.${ext}`);
-  }
-
-  const hasImagePath =
-    typeof image === "string" && image?.startsWith(supabaseUrl);
-
-  //we can override imageName here if we already have a path because
-  //we will just use the existing image value rather than concatenating
-  const imageName = hasImagePath
-    ? ""
-    : setImageName(image.name);
-
-  return false;
-  const imagePath = hasImagePath
-    ? image
-    : `${eventImageBaseUrl}${imageName}`;
-
-  //don't override the image object itself;
-  //replace it in the mutate statement only
-
-  //if we need to upload the image, do that and get the URL
-  let imgUrl = "";
-  let publicUrl = "";
-  if (!hasImagePath) {
-    const { error: storageError, data: storageData } = await supabase.storage
-      .from("eventImages")
-      .upload(imageName, image)
-
-
-    if (storageError) {
-      console.error(storageError);
-      throw new Error("Image could not be uploaded; event not created");
-    }
-
-    //TODO: check this
-    imgUrl = `${supabaseUrl}/storage/v1/object/public/${storageData.fullPath}`;
-
-    if (imgUrl === imagePath) publicUrl = storageData.fullPath;
-    else throw new Error("Returned imageURL not matched to expected path")
-  }
-
-
-  //get the image URL; failsafe
-  const { img } = supabase
-    .storage
-    .from('your-bucket-name')
-    .getPublicUrl(imageName);
-
-  console.log("img:", img)
 
   //if we didn't throw an error, keep going
   //create the event
@@ -150,7 +84,7 @@ export async function addEvent({
       eventDate,
       eventStartTime,
       eventEndTime,
-      imageUrl: imagePath,
+      imageUrl,
       categoryId,
       venueId,
       eventUrl,
@@ -166,7 +100,15 @@ export async function addEvent({
 }
 
 
+export async function postDateEvents() {
 
+  const { error } = await supabase.rpc('move_out_event_date');
+
+  if (error) {
+    throw new Error("Unable to move out event dates");
+  }
+
+}
 
 
 // let { data: event, error } = await supabase

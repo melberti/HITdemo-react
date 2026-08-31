@@ -1,19 +1,38 @@
 import { useForm } from "react-hook-form";
-import { useUploadImage } from "./useUploadImage";
+import { useNavigate, useLocation } from "react-router";
 import { useState, useRef } from "react";
 import { HiOutlinePhoto } from "react-icons/hi2";
+
+import { useEventImage } from "../../context/EventImageContext";
+import { useUploadImage } from "./useUploadImage";
+import { eventImageBaseUrl } from "../../services/supabase";
 import SubmitButton from "../../ui/SubmitButton";
 import Button from "../../ui/Button";
 import FormError from "../../ui/FormError";
 
 const ALLOWED_TYPES = ["image/jpg", "image/jpeg", "image/png", "image/gif"];
 
-function ImageUpload() {
+function ImageUpload({ onCloseModal }) {
   const { register, reset, formState, handleSubmit } = useForm();
   const { errors } = formState;
   const { uploadImage, isUploading } = useUploadImage();
   const [filename, setFilename] = useState("");
   const fileInputRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  //we'll pass isModal into the uploadImage call so we can tell the queryFn
+  //whether to route to /dashboard or to close the modal
+  //TO DO
+  const location = useLocation();
+  const isModal = location?.pathname?.toLowerCase() === "/addevent";
+
+  const { setImageUrl } = useEventImage();
+
+  //return to dashboard when NOT in a modal
+  function close() {
+    navigate("/dashboard");
+  }
 
   //register the validation for the image input
   const imageRegistration = register("image", {
@@ -21,7 +40,7 @@ function ImageUpload() {
     validate: {
       acceptedFormats: (files) => {
         // Ensure a file exists before checking its MIME type
-        if (!files || files.length === 0) return true;
+        if (!files || files?.length === 0) return true;
 
         const fileType = files[0]?.type;
         //console.log("filetype", fileType);
@@ -35,10 +54,10 @@ function ImageUpload() {
 
   //set filename when image is selected
   function handleChange(e) {
-    if (fileInputRef.current && fileInputRef.current.files.length === 0) {
+    if (fileInputRef.current && fileInputRef.current.files?.length === 0) {
       setFilename("");
     } else {
-      setFilename(e.target.files[0].name);
+      setFilename(e.target?.files[0]?.name);
     }
   }
 
@@ -50,9 +69,20 @@ function ImageUpload() {
   //submit the form
   function submitFunc(data) {
     if (!errors.length) {
-      const img = data.image[0]; //get the file
+      const image = data?.image[0]; //get the file
+      if (image) {
+        uploadImage(
+          { image },
+          {
+            onSuccess: (data) => {
+              setImageUrl(`${eventImageBaseUrl}${data.path}`);
 
-      uploadImage({ img });
+              if (isModal) onCloseModal?.();
+              else close();
+            },
+          },
+        );
+      }
     } else {
       setFilename("");
       return errors;
@@ -90,10 +120,7 @@ function ImageUpload() {
               accept="image/*"
               disabled={isUploading}
               {...imageRegistration}
-              // ref={(element) => {
-              //   imageRegistration.ref(element);
-              //   fileInputRef.current = element;
-              // }}
+
               onChange={(e) => {
                 imageRegistration.onChange(e);
                 handleChange(e);
@@ -103,21 +130,32 @@ function ImageUpload() {
           </div>
         )}
         {filename && (
-          <>
-            <div className="flex flex-row">Selected image: {filename}</div>
-            <div className="flex flex-row gap-2">
-              <SubmitButton disabled={isUploading}>Upload Image</SubmitButton>
+          <div className="flex flex-row">Selected image: {filename}</div>
+        )}
+
+        <div className="flex flex-row gap-2">
+          {filename && (
+            <>
+              <SubmitButton disabled={isUploading}>Upload file</SubmitButton>
               <Button
                 disabled={isUploading}
-                onClick={resetForm}
+                onClick={() => resetForm()}
                 color="neutral"
               >
                 Choose new file
               </Button>
-              {/* <ResetButton disabled={isUploading} onClick={resetForm} /> */}
-            </div>
-          </>
-        )}
+            </>
+          )}
+          {!isModal && (
+            <Button
+              color="neutral"
+              disabled={isUploading}
+              onClick={() => close()}
+            >
+              Cancel
+            </Button>
+          )}
+        </div>
       </div>
     </form>
   );

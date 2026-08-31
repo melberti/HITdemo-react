@@ -1,4 +1,4 @@
-import { formatWithDay, formatTime } from "../../utilities/dateTimeFormats";
+import { formatWithLongDay, formatTime } from "../../utilities/dateTimeFormats";
 import {
   HiCalendarDays,
   HiMiniCurrencyDollar,
@@ -25,6 +25,7 @@ function EventGridItem({ event, isCancelled = false, isPostponed = false }) {
   } = event;
 
   const reduceVisibility = isPostponed || isCancelled;
+  const reduceVisibilityClass = reduceVisibility ? "delayedOrCancelled" : "";
 
   return (
     <li className="relative flex flex-col overflow-hidden border-2 border-neutral-300 p-2">
@@ -33,21 +34,19 @@ function EventGridItem({ event, isCancelled = false, isPostponed = false }) {
         isCancelled={event.isCancelled}
       />
       <img
-        src={imageUrl || defaultImageUrl}
+        src={imageUrl ? imageUrl : defaultImageUrl}
         alt="Event image"
         title={title}
         max-width="50"
         max-height="50"
-        className={reduceVisibility && "delayedOrCancelled"}
+        className={reduceVisibilityClass}
       />
-      <h3 className={`textPink ${reduceVisibility && "delayedOrCancelled"}`}>
-        {title}
-      </h3>
-      <p className={reduceVisibility && "delayedOrCancelled"}>{description}</p>
+      <h3 className={`textPink ${reduceVisibilityClass}`}>{title}</h3>
+      <p className={reduceVisibilityClass}>{description}</p>
       <div className="mt-auto pt-3">
-        <div className={reduceVisibility && "delayedOrCancelled"}>
+        <div className={reduceVisibilityClass}>
           <HiCalendarDays className="icon" />
-          {formatWithDay(eventDate)}
+          {formatWithLongDay(eventDate)}
           <br />
           <HiClock className="icon" />
           {formatTime(eventStartTime)}

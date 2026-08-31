@@ -14,7 +14,7 @@ export function useAddVenue() {
         onError: (err) => toast.error(err.message),
         onSuccess: () => {
             toast.success("Venue added");
-            queryClient.invalidateQueries(["myvenues"])
+            queryClient.invalidateQueries(["myVenues"])
             navigate("/dashboard");
         }
     })

@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router";
 import { useSignUp } from "../features/authentication/useSignup";
 import { emailValidationRegex } from "../utilities/utilities";
+import Button from "../ui/Button";
 import SubmitButton from "../ui/SubmitButton";
 import ResetButton from "../ui/ResetButton";
 import InputDiv from "../ui/InputDiv";
@@ -24,9 +25,12 @@ function SignUp() {
         { email, password, firstName, lastName },
         {
           onSuccess: () => {
-            toast.success("Sign up successful. Please log in.", {
-              duration: 6000,
-            });
+            toast.success(
+              'Sign up successful. Please check your email for an email from Supabase with the subject "Confirm your email address". You must confirm your address before you can sign in.',
+              {
+                duration: 10000,
+              },
+            );
             navigate("/signin");
           },
           onSettled: reset(),
@@ -38,10 +42,21 @@ function SignUp() {
     }
   }
 
+  //return to home when Cancel is clicked
+  function close() {
+    navigate("/");
+  }
+
   return (
     <>
       <h2 className="mb-5 text-center">Sign Up</h2>
 
+      <p className="mx-123">
+        <span className="font-semibold">Please use a valid email address.</span>{" "}
+        After signing up you will receive an email from Supabase with the
+        subject "Confirm your email address". You must confirm your address
+        before you can sign in.
+      </p>
       <form onSubmit={handleSubmit(submitFunc)}>
         <FormContainer>
           <InputDiv
@@ -137,6 +152,13 @@ function SignUp() {
           <ButtonRow>
             <SubmitButton disabled={isLoading}>Sign Up</SubmitButton>
             <ResetButton disabled={isLoading} onClick={reset} />
+            <Button
+              color="neutral"
+              disabled={isLoading}
+              onClick={() => close()}
+            >
+              Cancel
+            </Button>
           </ButtonRow>
 
           <ButtonRow>
