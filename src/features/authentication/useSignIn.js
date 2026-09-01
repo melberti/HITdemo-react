@@ -4,7 +4,6 @@ import { toast } from "react-hot-toast"
 import { signIn as signInApi } from "../../services/apiAuthentication";
 
 export function useSignIn() {
-
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
@@ -18,6 +17,7 @@ export function useSignIn() {
             }
         },
         onSuccess: (data) => {
+            console.log('setting user query and routing to dashboard')
             queryClient.setQueryData(["user"], data.user);
             navigate("/dashboard", { replace: true });
         }

@@ -54,6 +54,16 @@ export function formatWithDayShortMonth(date) {
 
 export function formatTime(time) {
 
-  const toFormat = new Date(`1970-01-01T${time}`);
-  return toFormat.toLocaleTimeString();
+  const timeToFormat = new Date(`1970-01-01T${time}`);
+
+  const options = {
+    hour: 'numeric',
+    minute: '2-digit'
+  };
+
+  const formatted = new Intl.DateTimeFormat("en-US", options).format(
+    timeToFormat,
+  );
+  //console.log(formatted); // Outputs: "Tuesday, Feb 3, 2026" 
+  return formatted;
 }

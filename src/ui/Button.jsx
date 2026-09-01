@@ -6,12 +6,12 @@ function Button({
   type = "submit",
 }) {
   const sizeClass = size === "small" ? "small" : "normal";
-  const colorClass =
-    color === "neutral"
-      ? "neutral"
-      : color === "secondary"
-        ? "secondary"
-        : "primary";
+  const colorClass = color;
+  //   color === "neutral"
+  //     ? "neutral"
+  //     : color === "secondary"
+  //       ? "secondary"
+  //       : "primary";
   const className = `${colorClass} ${sizeClass}`;
 
   return (

@@ -22,7 +22,8 @@ function Home() {
           </a>
           . It is intended as a demo of my React knowledge and features a
           Supabase back-end. It also makes use of context, lazy
-          loading/suspense, Tanstack Query and Tailwind.{" "}
+          loading/suspense, Tanstack Query and Tailwind. It is a work in
+          progress.{" "}
           <span className="font-semibold">If you do not see events, </span>
           <Link onClick={handleLinkClick}>
             click here to update with future dates

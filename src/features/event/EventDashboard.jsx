@@ -11,7 +11,7 @@ function EventDashboard() {
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="mt-2 mb-10 grid grid-cols-7 gap-1 bg-neutral-200 p-1">
+    <div className="mt-2 mb-10 grid grid-cols-[repeat(3,minmax(max-content,1fr))] gap-1 bg-neutral-200 p-1">
       <div className="col-span-7 bg-(--primary-orange) p-1 text-center text-white">
         {events.length} EVENT{events.length > 1 && "S"}
       </div>

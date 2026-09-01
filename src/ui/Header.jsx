@@ -14,9 +14,6 @@ function Header() {
 
   return (
     <header>
-      <div className="mr-auto" id="left">
-        About Hear There Everywhere.
-      </div>
       <div>
         <ScreenSizeLogger show={false} />
       </div>

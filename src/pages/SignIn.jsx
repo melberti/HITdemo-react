@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { toast } from "react-hot-toast";
 import { useSignIn } from "../features/authentication/useSignIn";
 import { emailValidationRegex } from "../utilities/utilities";
+import { useNavigate } from "react-router";
 import Button from "../ui/Button";
 import SubmitButton from "../ui/SubmitButton";
 import ResetButton from "../ui/ResetButton";
@@ -14,6 +15,7 @@ function SignIn() {
   const { register, handleSubmit, formState, reset } = useForm();
   const { errors } = formState;
   const { signIn, isLoading } = useSignIn();
+  const navigate = useNavigate();
 
   function submitFunc(data) {
     if (!errors.length) {
@@ -23,6 +25,9 @@ function SignIn() {
         {
           onSuccess: () => {
             toast.success("Sign in successful");
+          },
+          onError: () => {
+            console.log("something wrong");
           },
           onSettled: reset(),
         },
@@ -50,6 +55,7 @@ function SignIn() {
             <input
               id="email"
               type="email"
+              autoFocus
               required
               {...register("email", {
                 required: true,

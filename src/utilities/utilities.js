@@ -38,3 +38,44 @@ export function getFilenameFromUrl(url, userId) {
     //return replace2 === "NULL" ? "" : replace2;
     return replace2;
 }
+
+export function getTimeOptions() {
+    var options = [
+        { id: "07:00:00", text: "07:00 AM" },
+        { id: "07:30:00", text: "07:30 AM" },
+        { id: "08:00:00", text: "08:00 AM" },
+        { id: "08:30:00", text: "08:30 AM" },
+        { id: "09:00:00", text: "09:00 AM" },
+        { id: "09:30:00", text: "09:30 AM" },
+        { id: "10:00:00", text: "10:00 AM" },
+        { id: "10:30:00", text: "10:30 AM" },
+        { id: "11:00:00", text: "11:00 AM" },
+        { id: "11:30:00", text: "11:30 AM" },
+        { id: "12:00:00", text: "Noon" },
+        { id: "12:30:00", text: "12:30 PM" },
+        { id: "13:00:00", text: "01:00 PM" },
+        { id: "13:30:00", text: "01:30 PM" },
+        { id: "14:00:00", text: "02:00 PM" },
+        { id: "14:30:00", text: "02:30 PM" },
+        { id: "15:00:00", text: "03:00 PM" },
+        { id: "15:30:00", text: "03:30 PM" },
+        { id: "16:00:00", text: "04:00 PM" },
+        { id: "16:30:00", text: "04:30 PM" },
+        { id: "17:00:00", text: "05:00 PM" },
+        { id: "17:30:00", text: "05:30 PM" },
+        { id: "18:00:00", text: "06:00 PM" },
+        { id: "18:30:00", text: "06:30 PM" },
+        { id: "19:00:00", text: "07:00 PM" },
+        { id: "19:30:00", text: "07:30 PM" },
+        { id: "20:00:00", text: "08:00 PM" },
+        { id: "20:30:00", text: "08:30 PM" },
+        { id: "21:00:00", text: "09:00 PM" },
+        { id: "21:30:00", text: "09:30 PM" },
+        { id: "22:00:00", text: "10:00 PM" },
+        { id: "22:30:00", text: "10:30 PM" },
+        { id: "23:00:00", text: "11:00 PM" },
+        { id: "23:30:00", text: "11:30 PM" },
+        { id: "00:00:00", text: "Midnight" },
+    ]
+    return options;
+}

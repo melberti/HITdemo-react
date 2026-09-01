@@ -9,6 +9,8 @@ import {
 
 import { defaultImageUrl } from "../../utilities/utilities";
 import EventOverlay from "./EventOverlay";
+import Modal from "../../ui/Modal";
+import ViewEvent from "./ViewEvent";
 
 function EventGridItem({ event, isCancelled = false, isPostponed = false }) {
   const {
@@ -16,11 +18,9 @@ function EventGridItem({ event, isCancelled = false, isPostponed = false }) {
     description,
     eventDate,
     eventStartTime,
-    eventEndTime,
     imageUrl,
     category,
     venue,
-    webUrl,
     cost,
   } = event;
 
@@ -28,40 +28,58 @@ function EventGridItem({ event, isCancelled = false, isPostponed = false }) {
   const reduceVisibilityClass = reduceVisibility ? "delayedOrCancelled" : "";
 
   return (
-    <li className="relative flex flex-col overflow-hidden border-2 border-neutral-300 p-2">
-      <EventOverlay
-        isPostponed={event.isPostponed}
-        isCancelled={event.isCancelled}
-      />
-      <img
-        src={imageUrl ? imageUrl : defaultImageUrl}
-        alt="Event image"
-        title={title}
-        max-width="50"
-        max-height="50"
-        className={reduceVisibilityClass}
-      />
-      <h3 className={`textPink ${reduceVisibilityClass}`}>{title}</h3>
-      <p className={reduceVisibilityClass}>{description}</p>
-      <div className="mt-auto pt-3">
-        <div className={reduceVisibilityClass}>
-          <HiCalendarDays className="icon" />
-          {formatWithLongDay(eventDate)}
-          <br />
-          <HiClock className="icon" />
-          {formatTime(eventStartTime)}
-          <br />
-          <HiMapPin className="icon" />
-          {venue.name}, {venue.city} {venue.state}
-          <br />
-          <HiMiniTag className="icon" />
-          {category.value}
-          <br />
-          <HiMiniCurrencyDollar className="icon" />
-          {cost === 0 ? "FREE!" : `${cost}`}
-        </div>
-      </div>
-    </li>
+    <Modal>
+      <Modal.Open opens="view">
+        <li className="relative flex flex-col overflow-hidden border-2 border-neutral-300 p-2">
+          <EventOverlay
+            isPostponed={event.isPostponed}
+            isCancelled={event.isCancelled}
+          />
+          <img
+            src={imageUrl ? imageUrl : defaultImageUrl}
+            alt="Event image"
+            title={title}
+            max-width="50"
+            max-height="50"
+            className={reduceVisibilityClass}
+          />
+          <h4 className={`textPink ${reduceVisibilityClass}`}>{title}</h4>
+          {/* <p className={reduceVisibilityClass}>{description}</p> */}
+          <div className="mb-auto pt-3">
+            {/* className={reduceVisibilityClass} */}
+            <div className="items-top grid grid-cols-[15px_1fr] gap-x-2">
+              <HiCalendarDays className="icon mt-0.5" />
+              <div className="content whitespace-nowrap">
+                {formatWithLongDay(eventDate)}
+              </div>
+            </div>
+            <div className="items-top grid grid-cols-[15px_1fr] gap-x-2">
+              <HiClock className="icon mt-0.5" />
+              <div className="content"> {formatTime(eventStartTime)}</div>
+            </div>
+            <div className="items-top grid grid-cols-[15px_1fr] gap-x-2">
+              <HiMapPin className="icon mt-0.5" />
+              <div className="content">
+                {venue.name}
+                <br /> {venue.city}, {venue.state}
+              </div>
+            </div>
+            <div className="items-top grid grid-cols-[15px_1fr] gap-x-2">
+              <HiMiniTag className="icon mt-0.5" />
+              <div className="content">{category.value}</div>
+            </div>
+            <div className="items-top gap--x2 grid grid-cols-[15px_1fr] gap-x-2">
+              <HiMiniCurrencyDollar className="icon mt-0.5" />
+              <div className="content">{cost === 0 ? "FREE!" : `${cost}`}</div>
+            </div>
+          </div>
+        </li>
+      </Modal.Open>
+
+      <Modal.Window name="view">
+        <ViewEvent event={event} />
+      </Modal.Window>
+    </Modal>
   );
 }
 

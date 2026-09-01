@@ -14,7 +14,7 @@ function EventDashboardList({ events }) {
         <div>
           Image <HiOutlineCursorClick size={18} className="inline" />
         </div>
-        <div>Postponed/Cancelled</div>
+        <div>Status</div>
       </div>
       {events.map((event) => (
         <EventDashboardItem event={event} key={event.id} />

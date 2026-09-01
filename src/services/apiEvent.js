@@ -7,9 +7,9 @@ export async function getEventsCurrent() {
   let { data, error } = await supabase
     .from('event')
     .select(`
-    id, title, description, eventDate, eventStartTime, eventEndTime, cost, imageUrl, isPostponed, isCancelled,
+    id, title, description, eventDate, eventStartTime, eventEndTime, cost, imageUrl, isPostponed, isCancelled, eventUrl,
     venue (
-      id, name, city, state
+      id, name, address1, city, state, zipCode, url, phone
     ),
     category (
     id, value)
@@ -72,10 +72,6 @@ export async function addEvent({
   cost,
 }) {
 
-
-
-  //if we didn't throw an error, keep going
-  //create the event
   const { data, error: eventError } = await supabase
     .from('event')
     .insert({
@@ -96,6 +92,26 @@ export async function addEvent({
     console.error(eventError);
     throw new Error("Event not created");
   }
+
+}
+
+
+export async function updateEvent(event) {
+
+  console.log('api, eventId', event.id);
+
+  const { data, error: eventError } = await supabase
+    .from('event')
+    .update({ cost: event.cost, description: event.description, eventDate: event.eventDate, eventStartTime: event.eventStartTime, eventEndTime: event.eventEndTime, imageUrl: event.imageUrl, isCancelled: event.isCancelled, isPostponed: event.isPostponed, title: event.title, categoryId: event.categoryId, venueId: event.venueId })
+    .eq("id", event.id)
+    .select()
+
+  if (eventError) {
+    console.error(eventError);
+    throw new Error("Event not updated");
+  }
+
+  console.log('api data after update', data)
 
 }
 

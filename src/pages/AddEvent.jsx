@@ -1,6 +1,14 @@
+import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
+import { FaRegClock } from "react-icons/fa";
 
-import { defaultImageUrl, urlValidationRegex } from "../utilities/utilities";
+import {
+  defaultImageUrl,
+  urlValidationRegex,
+  getTimeOptions,
+} from "../utilities/utilities";
+
+import { useEventImage } from "../context/EventImageContext";
 import { useCategory } from "../features/event/useCategory";
 import { useAddEvent } from "../features/event/useAddEvent";
 import { useMyVenues } from "../features/venue/useMyVenues";
@@ -15,11 +23,10 @@ import Spinner from "../ui/Spinner";
 import Modal from "../ui/Modal";
 import ImageUpload from "../features/image/ImageUpload";
 import ImageSelect from "../features/image/ImageSelect";
-import { useNavigate } from "react-router";
-import { useEventImage } from "../context/EventImageContext";
 
 function AddEvent() {
-  const { register, handleSubmit, reset, getValues, formState } = useForm();
+  const { register, handleSubmit, reset, getValues, setError, formState } =
+    useForm();
   const { errors } = formState;
 
   const { categories, isLoading: isLoadingCategories } = useCategory();
@@ -27,11 +34,26 @@ function AddEvent() {
   const { addEvent, isAdding } = useAddEvent();
 
   const { imageUrl, setImageUrl } = useEventImage();
+  const timeOptions = getTimeOptions();
 
   const navigate = useNavigate();
 
+  //for validating event Date
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   function close() {
     navigate("/dashboard");
+  }
+
+  //passed into custom registration method for eventEndTime
+  function validateEndTime() {
+    const startTime = getValues("eventStartTime");
+    const endTime = getValues("eventEndTime");
+    if (!startTime) return true; // Skip validation if start time isn't set yet
+
+    // Direct string comparison works for standard HTML time inputs ("HH:MM")
+    return endTime > startTime || "End time must be after start time";
   }
 
   function submitFunc(data) {
@@ -70,6 +92,35 @@ function AddEvent() {
     e.preventDefault();
     setImageUrl("");
     console.log("select your image");
+  }
+
+  const timeError = getTimeError();
+  //check messages returned by validation for start and end time
+  //they share a single error output
+  function getTimeError() {
+    if (
+      errors?.eventEndTime?.message &&
+      errors?.eventEndTime?.message != "Required"
+    )
+      return errors?.eventEndTime?.message;
+
+    if (
+      errors?.eventStartTime?.message !== undefined ||
+      errors?.eventEndTime?.message !== undefined
+    )
+      return "Both start and end time are required";
+
+    return "";
+  }
+
+  function validateDate(value) {
+    const selectedDate = new Date(`${value} 00:00`);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    return (
+      selectedDate.getTime() >= today.getTime() ||
+      "Date must be today or later logAndCheckValue"
+    );
   }
 
   if (isLoadingCategories || isLoadingVenues) return <Spinner />;
@@ -160,6 +211,7 @@ function AddEvent() {
               className="datetime"
               {...register("eventDate", {
                 required: "Required",
+                validate: (value) => validateDate(value),
               })}
               disabled={isAdding}
             />
@@ -169,24 +221,45 @@ function AddEvent() {
             label="Start and End Time"
             labelFor="eventStartTime"
             required={true}
-            error={
-              errors?.eventStartTime?.message
-                ? errors?.eventStartTime?.message
-                : errors?.eventEndTime?.message && errors?.eventEndTime.message
-            }
+            error={timeError}
           >
             <span className="ml-0 flex flex-nowrap justify-items-start gap-1">
-              <input
-                type="time"
-                id="eventStartTime"
-                className="datetime"
-                {...register("eventStartTime", {
-                  required: "Both start and end times are required",
-                })}
+              <SelectBox
+                options={timeOptions}
+                keyName="id"
+                valueKeyName="id"
+                textKeyName="text"
+                isRequired={true}
+                labelFor="eventStartTime"
+                isNumericValue={false}
+                register={register}
                 disabled={isAdding}
+                width="125"
+                icon={<FaRegClock />}
               />
-              <span className="pt-1">to</span>
-              <input
+              {/* <input
+                type="time"
+                id="x"
+                className="datetime"
+
+                disabled={isAdding}
+              /> */}
+              <span className="ml-3 pt-1">to</span>
+              <SelectBox
+                options={timeOptions}
+                keyName="id"
+                valueKeyName="id"
+                textKeyName="text"
+                isRequired={true}
+                labelFor="eventEndTime"
+                isNumericValue={false}
+                register={register}
+                disabled={isAdding}
+                width="125"
+                icon={<FaRegClock />}
+                customValidation={validateEndTime}
+              />
+              {/* <input
                 type="time"
                 id="eventEndTime"
                 className="datetime"
@@ -194,7 +267,7 @@ function AddEvent() {
                   required: "Both start and end times are required",
                 })}
                 disabled={isAdding}
-              />
+              /> */}
             </span>
           </InputDiv>
 
@@ -235,7 +308,10 @@ function AddEvent() {
                 validate: (value) =>
                   !isNaN(value) || "Please enter a valid number",
                 min: { value: 0, message: "Cost cannot be negative" },
-                max: { value: 1000, message: "Cost cannot be more than 1000" },
+                max: {
+                  value: 1000,
+                  message: "Cost cannot be more than 1000",
+                },
               })}
             />
           </InputDiv>
@@ -247,7 +323,7 @@ function AddEvent() {
             required={false}
           >
             <input
-              type="text"
+              type="hidden"
               id="imageUrl"
               value={imageUrl}
               {...register("imageUrl", {

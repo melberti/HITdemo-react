@@ -1,6 +1,10 @@
 import FormError from "./FormError";
 
 function InputDiv({ label, labelFor, error, required = false, children }) {
+  if (labelFor === "eventStartTime" || labelFor === "eventEndTime") {
+    console.log(error);
+  }
+
   return (
     <div className="inputDiv align-top">
       <label htmlFor={labelFor} className={required ? "required" : ""}>

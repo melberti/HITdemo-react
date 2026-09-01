@@ -58,7 +58,9 @@ function Window({ name, children }) {
   return createPortal(
     <Overlay>
       <div ref={ref} className="modal">
-        <Button onClick={close}>Close</Button>
+        <Button onClick={close} type="button" color="neutral" size="small">
+          Close
+        </Button>
         <div className="mt-5">
           {cloneElement(children, { onCloseModal: close })}
         </div>

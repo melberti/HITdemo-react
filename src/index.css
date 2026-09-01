@@ -48,6 +48,10 @@ Tailwind builds CSS in this order:
     @apply text-xl font-semibold;
   }
 
+  h4 {
+    @apply text-lg font-semibold;
+  }
+
   p {
     @apply pt-2;
   }
@@ -163,7 +167,7 @@ Tailwind builds CSS in this order:
 
   button.small,
   .button.small {
-    @apply h-6 px-1 py-1 text-sm md:h-8;
+    @apply h-6 px-2 py-1 text-sm md:h-8;
   }
 
   button.normal,
@@ -204,9 +208,7 @@ Tailwind builds CSS in this order:
 /* no @layer at all when writing one‑off utility compositions that don’t need ordering guarantees. */
 /* dark-mode overrides using raw CSS */
 /* animations */
-.icon,
-.postponed,
-.cancelled {
+.icon {
   @apply mr-2 mb-1 inline text-(--primary-pink);
 }
 
@@ -216,11 +218,19 @@ Tailwind builds CSS in this order:
 }
 
 .postponed {
-  @apply text-yellow-500;
+  @apply text-yellow-600;
 }
 
 .cancelled {
-  @apply: text-red-700;
+  @apply text-red-700;
+}
+
+button.postpone {
+  @apply bg-yellow-500 text-neutral-600;
+}
+
+button.cancel {
+  @apply bg-red-700;
 }
 
 .delayedOrCancelled {
@@ -310,16 +320,23 @@ input[type="file"] {
 
 .modal {
   position: fixed;
-  top: 50%;
   left: 50%;
+  top: 50%;
   transform: translate(-50%, -50%);
+  max-height: 90vh;
+  overflow-y: auto;
   background-color: white;
   border-radius: var(--border-radius-lg);
   border: solid 0.5px;
-  @apply border-neutral-300;
   padding: 3.2rem 4rem;
-  transition: all 0.5s;
   box-shadow: var(--shadow-lg);
+}
+
+@media (min-height: 500px) {
+  .modal {
+    top: 3rem;
+    transform: translateX(-50%);
+  }
 }
 
 /* LOADING SPINNER */
@@ -352,5 +369,3 @@ input[type="file"] {
   height: calc(100vh - 5rem);
   background-color: white;
 }
-
-button.link
