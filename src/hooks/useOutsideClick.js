@@ -11,6 +11,9 @@ export default function useOutsideClick(handler, listenOnCapture = true) {
     useEffect(
         function () {
             function handleClick(e) {
+                //nested modal should not close all modals, only self
+                if (e.target.closest(".modal")) return;
+
                 if (ref.current) {
                     if (!ref.current.contains(e.target)) {
                         handler();

@@ -8,7 +8,6 @@ function ImageDashboardItem({ image }) {
 
   const imageUrl = `${eventImageBaseUrl}${myUserid}/${image.name}`;
 
-  //console.log(image);
   return (
     <li className="relative flex flex-col overflow-hidden border-2 border-neutral-300 bg-white p-2">
       {" "}

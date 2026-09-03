@@ -6,58 +6,84 @@ import {
   defaultImageUrl,
   urlValidationRegex,
   getTimeOptions,
+  getStatusOptions,
+  getDateForCompare,
+  defaultDashboardUrl,
 } from "../utilities/utilities";
 
 import { useEventImage } from "../context/EventImageContext";
 import { useCategory } from "../features/event/useCategory";
 import { useAddEvent } from "../features/event/useAddEvent";
+import { useUpdateEvent } from "../features/event/useUpdateEvent";
 import { useMyVenues } from "../features/venue/useMyVenues";
 import FormContainer from "../ui/FormContainer";
 import InputDiv from "../ui/InputDiv";
 import Button from "../ui/Button";
 import SubmitButton from "../ui/SubmitButton";
 import ResetButton from "../ui/ResetButton";
-import ButtonRow from "../ui/ButtonRow";
+import FormButtonRow from "../ui/FormButtonRow";
 import SelectBox from "../ui/SelectBox";
 import Spinner from "../ui/Spinner";
 import Modal from "../ui/Modal";
 import ImageUpload from "../features/image/ImageUpload";
 import ImageSelect from "../features/image/ImageSelect";
+import { useEffect } from "react";
 
-function AddEvent() {
-  const { register, handleSubmit, reset, getValues, setError, formState } =
-    useForm();
+function AddEvent({ event, onCloseModal }) {
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    getValues,
+    setError,
+    setValue,
+    formState,
+  } = useForm();
   const { errors } = formState;
 
   const { categories, isLoading: isLoadingCategories } = useCategory();
   const { venues, isLoading: isLoadingVenues } = useMyVenues();
   const { addEvent, isAdding } = useAddEvent();
-
+  const { updateEvent, isUpdating } = useUpdateEvent();
   const { imageUrl, setImageUrl } = useEventImage();
-  const timeOptions = getTimeOptions();
 
-  const navigate = useNavigate();
+  const timeOptions = getTimeOptions();
+  const statusOptions = getStatusOptions();
+
+  const disabled =
+    isLoadingCategories || isLoadingVenues || isAdding || isUpdating;
+
+  //if editing (if we have an event)
+  //set imageUrl to the event's image
+  useEffect(
+    function () {
+      if (event?.imageUrl) {
+        setImageUrl(event.imageUrl);
+      }
+    },
+    [event?.imageUrl, setImageUrl],
+  );
+
+  //if new imageUrl selected, update the form with it
+  useEffect(
+    function () {
+      setValue("imageUrl", imageUrl, { shouldDirty: false });
+    },
+    [imageUrl, setValue],
+  );
 
   //for validating event Date
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = getDateForCompare(new Date());
 
   function close() {
-    navigate("/dashboard");
-  }
-
-  //passed into custom registration method for eventEndTime
-  function validateEndTime() {
-    const startTime = getValues("eventStartTime");
-    const endTime = getValues("eventEndTime");
-    if (!startTime) return true; // Skip validation if start time isn't set yet
-
-    // Direct string comparison works for standard HTML time inputs ("HH:MM")
-    return endTime > startTime || "End time must be after start time";
+    onCloseModal?.();
+    navigate(defaultDashboardUrl);
   }
 
   function submitFunc(data) {
     const {
+      id,
       title,
       description,
       eventDate,
@@ -68,21 +94,46 @@ function AddEvent() {
       venueId,
       eventUrl,
       cost,
+      status,
     } = data;
 
     if (!errors.length) {
-      addEvent({
-        title,
-        description,
-        eventDate,
-        eventStartTime,
-        eventEndTime,
-        imageUrl,
-        categoryId,
-        venueId,
-        eventUrl,
-        cost,
-      });
+      if (id) {
+        //edit event
+        const isPostponed = status === "Postponed";
+        const isCancelled = status === "Cancelled;";
+
+        updateEvent(
+          {
+            id,
+            title,
+            description,
+            eventDate,
+            eventStartTime,
+            eventEndTime,
+            imageUrl,
+            categoryId,
+            venueId,
+            eventUrl,
+            cost,
+            isPostponed,
+            isCancelled,
+          },
+          { onSuccess: close },
+        );
+      } else
+        addEvent({
+          title,
+          description,
+          eventDate,
+          eventStartTime,
+          eventEndTime,
+          imageUrl,
+          categoryId,
+          venueId,
+          eventUrl,
+          cost,
+        });
     } else {
       return errors;
     }
@@ -91,7 +142,25 @@ function AddEvent() {
   function selectImageClick(e) {
     e.preventDefault();
     setImageUrl("");
-    console.log("select your image");
+  }
+
+  //CUSTOM VALIDATIONS AND ERROR MESSAGES
+  function validateDate(value) {
+    const selectedDate = getDateForCompare(value);
+
+    return (
+      selectedDate >= today || "Date must be today or later logAndCheckValue"
+    );
+  }
+
+  //passed into custom registration method for eventEndTime
+  function validateEndTime() {
+    const startTime = getValues("eventStartTime");
+    const endTime = getValues("eventEndTime");
+    if (!startTime) return true; // Skip validation if start time isn't set yet
+
+    // Direct string comparison works for standard HTML time inputs ("HH:MM")
+    return endTime > startTime || "End time must be after start time";
   }
 
   const timeError = getTimeError();
@@ -113,23 +182,49 @@ function AddEvent() {
     return "";
   }
 
-  function validateDate(value) {
-    const selectedDate = new Date(`${value} 00:00`);
-    selectedDate.setHours(0, 0, 0, 0);
-
-    return (
-      selectedDate.getTime() >= today.getTime() ||
-      "Date must be today or later logAndCheckValue"
-    );
-  }
+  const selectedStatus = event?.isCancelled
+    ? "Cancelled"
+    : event?.isPostponed
+      ? "Postponed"
+      : "Active";
 
   if (isLoadingCategories || isLoadingVenues) return <Spinner />;
 
   return (
     <>
-      <h2 className="mb-5 text-center">Add Event</h2>
+      <h2 className="mb-5 text-center">
+        {event?.id ? "Edit" : event ? "Clone" : "Add"} Event
+      </h2>
       <form onSubmit={handleSubmit(submitFunc)}>
         <FormContainer>
+          {event && (
+            <input type="hidden" id="id" value={event.id} {...register("id")} />
+          )}
+
+          {(event?.isCancelled || event?.isPostponed) && (
+            <InputDiv
+              label="Status"
+              labelFor="status"
+              error={errors?.status?.message}
+              required={true}
+            >
+              <SelectBox
+                id="status"
+                defaultValue={selectedStatus}
+                register={register}
+                disabled={disabled}
+                options={statusOptions}
+                keyName="text"
+                valueKeyName="text"
+                textKeyName="text"
+                isRequired={true}
+                labelFor="status"
+                isNumericValue={false}
+                hideEmpty={true}
+              ></SelectBox>
+            </InputDiv>
+          )}
+
           <InputDiv
             label="Event Title"
             labelFor="title"
@@ -140,8 +235,9 @@ function AddEvent() {
               type="text"
               id="title"
               name="title"
+              defaultValue={event?.title}
               {...register("title", { required: "Required" })}
-              disabled={isAdding}
+              disabled={disabled}
             />
           </InputDiv>
           <InputDiv
@@ -154,10 +250,11 @@ function AddEvent() {
               rows={5}
               columns={100}
               id="description"
+              defaultValue={event?.description}
               {...register("description", {
                 required: "Required",
               })}
-              disabled={isAdding}
+              disabled={disabled}
             />
           </InputDiv>
 
@@ -176,7 +273,8 @@ function AddEvent() {
               labelFor="categoryId"
               isNumericValue={true}
               register={register}
-              disabled={isAdding}
+              disabled={disabled}
+              defaultValue={event?.category?.id}
             />
           </InputDiv>
 
@@ -195,7 +293,8 @@ function AddEvent() {
               labelFor="venueId"
               isNumericValue={true}
               register={register}
-              disabled={isAdding}
+              disabled={disabled}
+              defaultValue={event?.venue?.id}
             />
           </InputDiv>
 
@@ -213,7 +312,8 @@ function AddEvent() {
                 required: "Required",
                 validate: (value) => validateDate(value),
               })}
-              disabled={isAdding}
+              disabled={disabled}
+              defaultValue={event?.eventDate}
             />
           </InputDiv>
           <InputDiv
@@ -233,16 +333,17 @@ function AddEvent() {
                 labelFor="eventStartTime"
                 isNumericValue={false}
                 register={register}
-                disabled={isAdding}
+                disabled={disabled}
                 width="125"
                 icon={<FaRegClock />}
+                defaultValue={event?.eventStartTime}
               />
               {/* <input
                 type="time"
                 id="x"
                 className="datetime"
 
-                disabled={isAdding}
+                disabled={disabled}
               /> */}
               <span className="ml-3 pt-1">to</span>
               <SelectBox
@@ -258,6 +359,7 @@ function AddEvent() {
                 width="125"
                 icon={<FaRegClock />}
                 customValidation={validateEndTime}
+                defaultValue={event?.eventEndTime}
               />
               {/* <input
                 type="time"
@@ -287,9 +389,9 @@ function AddEvent() {
                   message: "Invalid URL",
                 },
               })}
+              defaultValue={event?.eventUrl}
             />
           </InputDiv>
-
           <InputDiv
             label="Event Cost"
             labelFor="cost"
@@ -299,9 +401,9 @@ function AddEvent() {
             <input
               type="text"
               id="cost"
-              defaultValue={0}
               placeholder="Enter 0 for FREE"
               disabled={isAdding}
+              defaultValue={event?.cost || 0}
               {...register("cost", {
                 required: "Required",
                 valueAsNumber: true,
@@ -371,7 +473,7 @@ function AddEvent() {
                       </Button>
                     </Modal.Open>
                     <Modal.Open opens="upload">
-                      <Button color="secondary" size="small">
+                      <Button color="secondary" size="small" type="button">
                         Upload an image
                       </Button>
                     </Modal.Open>
@@ -388,13 +490,13 @@ function AddEvent() {
             </div>
           </InputDiv>
 
-          <ButtonRow>
+          <FormButtonRow>
             <SubmitButton disabled={isAdding}>Submit Event</SubmitButton>
             <ResetButton disabled={isAdding} onClick={reset} />
             <Button color="neutral" disabled={isAdding} onClick={close}>
               Cancel
             </Button>
-          </ButtonRow>
+          </FormButtonRow>
         </FormContainer>
       </form>
     </>

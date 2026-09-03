@@ -10,6 +10,8 @@ export const zipValidationRegex = /[0-9]{5}/;
 
 export const defaultImageUrl = `${eventImageBaseUrl}NoImageProvided.png`;
 
+export const defaultDashboardUrl = "/dashboard?eventStatus=all&eventDate=current"
+
 export function formatPhoneNumber(value) {
     if (!value) return value;
 
@@ -25,9 +27,6 @@ export function formatPhoneNumber(value) {
 
 
 export function getExtension(filename) {
-    // console.log(filename);
-    // console.log(filename.lastIndexOf("."));
-    // return false;
     return filename.slice((filename.lastIndexOf(".") >>> 0) + 1);
 }
 
@@ -37,6 +36,15 @@ export function getFilenameFromUrl(url, userId) {
     const replace2 = replace1.replace(`${userId}/`, "")
     //return replace2 === "NULL" ? "" : replace2;
     return replace2;
+}
+
+export function getStatusOptions() {
+    var options = [
+        { text: "Postponed" },
+        { text: "Cancelled" },
+        { text: "Active" },
+    ]
+    return options;
 }
 
 export function getTimeOptions() {
@@ -79,3 +87,28 @@ export function getTimeOptions() {
     ]
     return options;
 }
+
+export function getDateForCompare(dt) {
+    let date;
+
+    if (dt instanceof Date) {
+        date = new Date(dt.getTime());
+    } else if (typeof dt === "string" && /^\d{4}-\d{2}-\d{2}$/.test(dt)) {
+        const [year, month, day] = dt.split("-").map(Number);
+        date = new Date(year, month - 1, day);
+    } else {
+        date = new Date(dt);
+    }
+
+    if (Number.isNaN(date.getTime())) {
+        return NaN;
+    }
+
+    return [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0"),
+    ].join("-");
+
+}
+

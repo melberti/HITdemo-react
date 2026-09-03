@@ -4,7 +4,7 @@ import { signUp as signUpApi } from "../../services/apiAuthentication";
 
 export function useSignUp() {
 
-    const { mutate: signUp, isLoading } = useMutation({
+    const { mutate: signUp, isPending } = useMutation({
 
         mutationFn: ({ email, password, firstName, lastName }) => signUpApi({ email, password, firstName, lastName }),
         mutationKey: ["user"],
@@ -14,5 +14,5 @@ export function useSignUp() {
         },
     })
 
-    return { signUp, isLoading }
+    return { signUp, isPending }
 }

@@ -17,7 +17,6 @@ function DarkModeProvider({ children }) {
 
   //event handler
   function toggleDarkMode() {
-    //console.log("toggling dark mode");
     setIsDarkMode((dm) => !dm);
   }
 
@@ -30,7 +29,6 @@ function DarkModeProvider({ children }) {
       root.classList.remove("dark");
     }
   }, [isDarkMode]);
-
 
   //return context provider; wrap entire app in this so it can be used throughout
   return (

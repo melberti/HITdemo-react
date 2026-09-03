@@ -9,12 +9,12 @@ import SubmitButton from "../ui/SubmitButton";
 import ResetButton from "../ui/ResetButton";
 import InputDiv from "../ui/InputDiv";
 import FormContainer from "../ui/FormContainer";
-import ButtonRow from "../ui/ButtonRow";
+import FormButtonRow from "../ui/FormButtonRow";
 
 function SignIn() {
   const { register, handleSubmit, formState, reset } = useForm();
   const { errors } = formState;
-  const { signIn, isLoading } = useSignIn();
+  const { signIn, isPending } = useSignIn();
   const navigate = useNavigate();
 
   function submitFunc(data) {
@@ -26,9 +26,7 @@ function SignIn() {
           onSuccess: () => {
             toast.success("Sign in successful");
           },
-          onError: () => {
-            console.log("something wrong");
-          },
+
           onSettled: reset(),
         },
       );
@@ -64,7 +62,7 @@ function SignIn() {
                   message: "Invalid email",
                 },
               })}
-              disabled={isLoading}
+              disabled={isPending}
             />
           </InputDiv>
 
@@ -78,29 +76,29 @@ function SignIn() {
               type="password"
               required
               {...register("password", { required: true })}
-              disabled={isLoading}
+              disabled={isPending}
             />
             {errors?.password}
           </InputDiv>
 
-          <ButtonRow>
-            <SubmitButton disabled={isLoading}>Sign In</SubmitButton>
-            <ResetButton disabled={isLoading} onClick={reset} />
+          <FormButtonRow>
+            <SubmitButton disabled={isPending}>Sign In</SubmitButton>
+            <ResetButton disabled={isPending} onClick={reset} />
             <Button
               color="neutral"
-              disabled={isLoading}
+              disabled={isPending}
               onClick={() => close()}
             >
               Cancel
             </Button>
-          </ButtonRow>
+          </FormButtonRow>
 
-          <ButtonRow>
+          <FormButtonRow>
             Not a member yet?{" "}
             <Link to="/signup" className="caret">
               Sign Up
             </Link>
-          </ButtonRow>
+          </FormButtonRow>
         </FormContainer>
       </form>
     </>

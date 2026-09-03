@@ -2,13 +2,14 @@ import { toast } from "react-hot-toast"
 import { useNavigate } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { addEvent as addEventApi } from "../../services/apiEvent"
+import { defaultDashboardUrl } from "../../utilities/utilities"
 
 export function useAddEvent() {
 
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
-    const { mutate: addEvent, isLoading: isAdding } = useMutation({
+    const { mutate: addEvent, isPending: isAdding } = useMutation({
         mutationFn: ({
             title,
             description,
@@ -39,7 +40,7 @@ export function useAddEvent() {
             toast.success("Event added");
             queryClient.invalidateQueries(["myEvents"])
             queryClient.invalidateQueries(["events"])
-            navigate("/dashboard")
+            navigate(defaultDashboardUrl)
         }
 
     })

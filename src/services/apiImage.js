@@ -34,7 +34,6 @@ export async function getImages({ signal }) {
 
 export async function uploadImage({ image }) {
 
-
     //we don't need isModal here
 
     //create unique imageName by appending random number and saving to user's own folder
@@ -60,9 +59,7 @@ export async function uploadImage({ image }) {
         throw new Error("Image could not be uploaded");
     }
 
-    // console.log('data returned from save', storageData)
-    // console.log('actual name', storageData.path);
-    // console.log('expected name', imageName);
+
 
     if (storageData.path !== imageName)
         throw new Error("Returned storage URL not matched to expected path")

@@ -1,19 +1,20 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import {
   phoneValidationRegex,
   zipValidationRegex,
   urlValidationRegex,
+  defaultDashboardUrl,
 } from "../utilities/utilities";
 import { formatPhoneNumber } from "../utilities/utilities";
 import { useAddVenue } from "../features/venue/useAddVenue";
 import FormContainer from "../ui/FormContainer";
-import ButtonRow from "../ui/ButtonRow";
+import FormButtonRow from "../ui/FormButtonRow";
 import SubmitButton from "../ui/SubmitButton";
 import ResetButton from "../ui/ResetButton";
 import Button from "../ui/Button";
 import InputDiv from "../ui/InputDiv";
 import SelectState from "../ui/SelectState";
-import { useNavigate } from "react-router";
 
 function AddVenue() {
   const { register, handleSubmit, formState, clearErrors, reset } = useForm();
@@ -24,7 +25,7 @@ function AddVenue() {
   const navigate = useNavigate();
 
   function close() {
-    navigate("/dashboard");
+    navigate(defaultDashboardUrl);
   }
 
   function submitFunc(data) {
@@ -173,13 +174,13 @@ function AddVenue() {
               })}
             />
           </InputDiv>
-          <ButtonRow>
+          <FormButtonRow>
             <SubmitButton disabled={isAdding}>Submit Venue</SubmitButton>
             <ResetButton disabled={isAdding} onClick={reset} />
             <Button color="neutral" disabled={isAdding} onClick={close}>
               Cancel
             </Button>
-          </ButtonRow>
+          </FormButtonRow>
         </FormContainer>
       </form>
     </>

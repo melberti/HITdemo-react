@@ -8,14 +8,14 @@ import SubmitButton from "../ui/SubmitButton";
 import ResetButton from "../ui/ResetButton";
 import InputDiv from "../ui/InputDiv";
 import FormContainer from "../ui/FormContainer";
-import ButtonRow from "../ui/ButtonRow";
+import FormButtonRow from "../ui/FormButtonRow";
 
 function SignUp() {
   const { register, handleSubmit, formState, getValues, reset } = useForm();
   const { errors } = formState;
   const navigate = useNavigate();
 
-  const { signUp, isLoading } = useSignUp();
+  const { signUp, isPending } = useSignUp();
 
   function submitFunc(data) {
     if (!errors.length) {
@@ -71,7 +71,7 @@ function SignUp() {
               {...register("firstName", {
                 required: true,
               })}
-              disabled={isLoading}
+              disabled={isPending}
             />
           </InputDiv>
 
@@ -87,7 +87,7 @@ function SignUp() {
               {...register("lastName", {
                 required: true,
               })}
-              disabled={isLoading}
+              disabled={isPending}
             />
           </InputDiv>
 
@@ -107,7 +107,7 @@ function SignUp() {
                   message: "Invalid email",
                 },
               })}
-              disabled={isLoading}
+              disabled={isPending}
             />
           </InputDiv>
 
@@ -127,7 +127,7 @@ function SignUp() {
                   message: "Must be at least 8 characters",
                 },
               })}
-              disabled={isLoading}
+              disabled={isPending}
             />
           </InputDiv>
 
@@ -145,28 +145,28 @@ function SignUp() {
                   value === getValues().password ||
                   "Repeat password not matched",
               })}
-              disabled={isLoading}
+              disabled={isPending}
             />
           </InputDiv>
 
-          <ButtonRow>
-            <SubmitButton disabled={isLoading}>Sign Up</SubmitButton>
-            <ResetButton disabled={isLoading} onClick={reset} />
+          <FormButtonRow>
+            <SubmitButton disabled={isPending}>Sign Up</SubmitButton>
+            <ResetButton disabled={isPending} onClick={reset} />
             <Button
               color="neutral"
-              disabled={isLoading}
+              disabled={isPending}
               onClick={() => close()}
             >
               Cancel
             </Button>
-          </ButtonRow>
+          </FormButtonRow>
 
-          <ButtonRow>
+          <FormButtonRow>
             Already a member?{" "}
             <Link to="/signin" className="caret">
               Sign In
             </Link>
-          </ButtonRow>
+          </FormButtonRow>
         </FormContainer>
       </form>
     </>

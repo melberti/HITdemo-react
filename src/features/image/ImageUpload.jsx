@@ -1,14 +1,17 @@
 import { useForm } from "react-hook-form";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 import { useState, useRef } from "react";
 import { HiOutlinePhoto } from "react-icons/hi2";
 
 import { useEventImage } from "../../context/EventImageContext";
 import { useUploadImage } from "./useUploadImage";
 import { eventImageBaseUrl } from "../../services/supabase";
+import { defaultDashboardUrl } from "../../utilities/utilities";
+
 import SubmitButton from "../../ui/SubmitButton";
 import Button from "../../ui/Button";
 import FormError from "../../ui/FormError";
+import SpinnerFullPage from "../../ui/SpinnerFullPage";
 
 const ALLOWED_TYPES = ["image/jpg", "image/jpeg", "image/png", "image/gif"];
 
@@ -21,17 +24,13 @@ function ImageUpload({ onCloseModal }) {
 
   const navigate = useNavigate();
 
-  //we'll pass isModal into the uploadImage call so we can tell the queryFn
-  //whether to route to /dashboard or to close the modal
-  //TO DO
-  const location = useLocation();
-  const isModal = location?.pathname?.toLowerCase() === "/addevent";
+  const isModal = Boolean(onCloseModal);
 
   const { setImageUrl } = useEventImage();
 
   //return to dashboard when NOT in a modal
   function close() {
-    navigate("/dashboard");
+    navigate(defaultDashboardUrl);
   }
 
   //register the validation for the image input
@@ -43,7 +42,6 @@ function ImageUpload({ onCloseModal }) {
         if (!files || files?.length === 0) return true;
 
         const fileType = files[0]?.type;
-        //console.log("filetype", fileType);
         return (
           ALLOWED_TYPES.includes(fileType) ||
           "Only JPEG, PNG, and GIF files are allowed"
@@ -78,7 +76,11 @@ function ImageUpload({ onCloseModal }) {
               setImageUrl(`${eventImageBaseUrl}${data.path}`);
 
               if (isModal) onCloseModal?.();
-              else close();
+              else {
+                //dump the image name so we aren't hanging onto it when we should not be
+                setImageUrl("");
+                close();
+              }
             },
           },
         );
@@ -95,8 +97,14 @@ function ImageUpload({ onCloseModal }) {
     reset();
   }
 
+  function submitImageForm(e) {
+    e.stopPropagation();
+    handleSubmit(submitFunc, invalidateSubmit)(e);
+  }
+
+  if (isUploading) return <SpinnerFullPage />;
   return (
-    <form onSubmit={handleSubmit(submitFunc, invalidateSubmit)}>
+    <form onSubmit={submitImageForm}>
       <div className="inputDiv grid grid-cols-1 items-center justify-items-center align-top">
         <h3 className="mb-0 text-center">
           Select an image for upload.
@@ -137,6 +145,7 @@ function ImageUpload({ onCloseModal }) {
           {filename && (
             <>
               <SubmitButton disabled={isUploading}>Upload file</SubmitButton>
+
               <Button
                 disabled={isUploading}
                 onClick={() => resetForm()}

@@ -2,12 +2,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast"
 import { signIn as signInApi } from "../../services/apiAuthentication";
+import { defaultDashboardUrl } from "../../utilities/utilities"
 
 export function useSignIn() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
-    const { mutate: signIn, isLoading } = useMutation({
+    const { mutate: signIn, isPending } = useMutation({
         mutationFn: ({ email, password }) => signInApi({ email, password }),
         mutationKey: ["user"],
         onError: (err) => {
@@ -17,11 +18,10 @@ export function useSignIn() {
             }
         },
         onSuccess: (data) => {
-            console.log('setting user query and routing to dashboard')
             queryClient.setQueryData(["user"], data.user);
-            navigate("/dashboard", { replace: true });
+            navigate(defaultDashboardUrl, { replace: true });
         }
     })
 
-    return { signIn, isLoading }
+    return { signIn, isPending }
 }

@@ -12,7 +12,8 @@ export function formatWithLongDay(date) {
   const formatted = new Intl.DateTimeFormat("en-US", options).format(
     dateToFormat,
   );
-  //console.log(formatted); // Outputs: "Tuesday, February 3, 2026" 
+
+  // Outputs: "Tuesday, February 3, 2026" 
   return formatted;
 }
 
@@ -30,7 +31,8 @@ export function formatShortDate(date) {
   const formatted = new Intl.DateTimeFormat("en-US", options).format(
     dateToFormat,
   );
-  //console.log(formatted); // Outputs: "Tuesday, February 3, 2026" 
+
+  // Outputs: "Tuesday, February 3, 2026" 
   return formatted;
 }
 
@@ -48,7 +50,7 @@ export function formatWithDayShortMonth(date) {
   const formatted = new Intl.DateTimeFormat("en-US", options).format(
     dateToFormat,
   );
-  //console.log(formatted); // Outputs: "Tuesday, Feb 3, 2026" 
+  // Outputs: "Tue, Feb 3, 2026" 
   return formatted;
 }
 
@@ -64,6 +66,10 @@ export function formatTime(time) {
   const formatted = new Intl.DateTimeFormat("en-US", options).format(
     timeToFormat,
   );
-  //console.log(formatted); // Outputs: "Tuesday, Feb 3, 2026" 
+  // Outputs: "7:30 PM" 
   return formatted;
+}
+
+export function getTodayAsISO() {
+  return new Date().toISOString().split('T')[0]
 }

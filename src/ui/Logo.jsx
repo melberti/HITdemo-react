@@ -9,9 +9,9 @@ function Logo() {
     <section className="logo">
       <Link to="/">
         {isDarkMode ? (
-          <img src="./logo.png" width="125px" height="118" />
+          <img src="./logo.png" width="90px" height="85" />
         ) : (
-          <img src="./logo_inverse.png" width="125px" height="118" />
+          <img src="./logo_inverse.png" width="90px" height="85" />
         )}
       </Link>
       <span>Hear. There. Everywhere.</span>

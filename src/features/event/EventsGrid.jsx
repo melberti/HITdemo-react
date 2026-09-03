@@ -23,7 +23,7 @@ function EventsGrid() {
 
   if (isLoading) return <Spinner />;
 
-  if (!events) return <NoEventsFound />;
+  if (!displayEvents) return <NoEventsFound />;
 
   return (
     <ul className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">

@@ -3,6 +3,7 @@ import { CgDarkMode } from "react-icons/cg";
 import { useDarkMode } from "../context/DarkModeContex";
 import { useUser } from "../features/authentication/useUser";
 import { useSignOut } from "../features/authentication/useSignOut";
+import { defaultDashboardUrl } from "../utilities/utilities";
 import Button from "./Button";
 import ScreenSizeLogger from "./ScreenSizeLogger";
 
@@ -25,7 +26,7 @@ function Header() {
         <>
           <div>Welcome, {user.user_metadata.firstName}!</div>
           <div>
-            <Link to="/dashboard" className="dashboard">
+            <Link to={defaultDashboardUrl} className="dashboard">
               View Dashboard
             </Link>
           </div>

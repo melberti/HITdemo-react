@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function SelectBox({
   options,
@@ -15,9 +15,14 @@ function SelectBox({
   width,
   icon,
   customValidation,
+  defaultValue,
+  hideEmpty = false,
 }) {
   const defaultState = isNumericValue ? 0 : null;
   const [selectedVal, setSelectedVal] = useState(defaultState);
+
+  //if a default value was passed (as on edit), set into state
+  const selected = defaultValue ? defaultValue : selectedVal;
 
   //for select box width
   const widthStyle = width === null ? undefined : { width: `${width}px` };
@@ -30,10 +35,11 @@ function SelectBox({
     //then pass any handler prop
     onChange?.(e);
   }
+
   return (
     <>
       <select
-        defaultValue={selectedVal}
+        defaultValue={selected}
         className={marginStyle}
         style={widthStyle}
         {...register(labelFor, {
@@ -50,7 +56,7 @@ function SelectBox({
         })}
         onChange={(e) => handleChange(e)}
       >
-        <option value={isNumericValue ? 0 : ""}>SELECT</option>
+        {!hideEmpty && <option value={isNumericValue ? 0 : ""}>SELECT</option>}
 
         {options.map((opt) => (
           <option value={opt[valueKeyName]} key={opt[keyName]}>

@@ -20,7 +20,7 @@ function ImageDashboard() {
         Add Image
       </Button>
       <div className="mt-2 mb-10 gap-1 bg-neutral-200 p-1">
-        <div className="col-span-5 bg-(--primary-pink) p-1 text-center text-white">
+        <div className="bg-primary-pink col-span-5 p-1 text-center text-white">
           {myImages?.length} IMAGE{myImages?.length > 1 && "S"}
         </div>
 

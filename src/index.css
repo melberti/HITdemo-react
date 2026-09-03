@@ -10,8 +10,8 @@
 @theme {
   --font-HIT: "Google Sans Flex", mono;
   --font-banner: "Luckiest Guy", mono;
-  --primary-pink: #9c1e5c;
-  --primary-orange: #f97316;
+  --color-primary-pink: #9c1e5c;
+  --color-primary-orange: #f97316;
 }
 
 /* 
@@ -60,16 +60,10 @@ Tailwind builds CSS in this order:
     @apply font-semibold;
   }
 
-  input,
-  select,
-  textarea {
-    @apply w-xs rounded-md border border-stone-200 px-2 py-1 text-base shadow-inner placeholder:text-stone-400 focus:ring-2 focus:ring-neutral-300;
-  }
-
   input::selection,
   textarea::selection,
   select:focus-visible {
-    @apply bg-orange-300;
+    @apply bg-orange-200;
   }
 
   label {
@@ -86,7 +80,7 @@ Tailwind builds CSS in this order:
 
   button,
   .button {
-    @apply inline w-auto rounded-md border border-neutral-100 text-nowrap text-neutral-100 shadow-inner focus:ring-2 focus:ring-neutral-300 active:bg-stone-300 disabled:cursor-not-allowed;
+    @apply inline-flex w-auto items-center justify-center rounded-md border border-neutral-100 text-nowrap text-neutral-100 shadow-inner focus:ring-2 focus:ring-neutral-300 active:bg-stone-300 disabled:cursor-not-allowed;
   }
 
   select,
@@ -97,7 +91,7 @@ Tailwind builds CSS in this order:
     outline: none;
     padding-right: 10px;
     background-color: white;
-    @apply mx-2 rounded-md p-1 text-neutral-600;
+    @apply mx-2 w-xs rounded-md border border-stone-200 px-2 py-1 text-base text-neutral-600 placeholder:text-stone-400 focus:ring-2 focus:ring-neutral-300;
   }
 
   option {
@@ -116,8 +110,8 @@ Tailwind builds CSS in this order:
   }
 
   .logo {
-    @apply flex items-center p-3 text-2xl sm:text-3xl md:text-5xl lg:text-6xl;
-    background-color: var(--primary-pink);
+    @apply bg-primary-pink flex items-center p-3 text-xl sm:text-2xl md:text-4xl lg:text-5xl;
+
     color: white;
     font-family: var(--font-banner);
     max-height: 145px;
@@ -137,7 +131,7 @@ Tailwind builds CSS in this order:
 
   button.primary,
   .button.primary {
-    background-color: var(--primary-orange);
+    @apply bg-primary-orange;
   }
 
   button.primary:hover,
@@ -167,7 +161,7 @@ Tailwind builds CSS in this order:
 
   button.small,
   .button.small {
-    @apply h-6 px-2 py-1 text-sm md:h-8;
+    @apply h-6 px-2 text-sm md:h-8;
   }
 
   button.normal,
@@ -180,14 +174,12 @@ Tailwind builds CSS in this order:
   }
 
   .filter {
-    background-color: var(--primary-orange);
-    text-transform: uppercase;
-    @apply flex w-full overflow-x-hidden p-3;
+    @apply bg-primary-orange flex overflow-x-hidden px-3 py-2 uppercase;
   }
 
   .textPink,
   a {
-    color: var(--primary-pink);
+    @apply text-primary-pink;
   }
 
   a.caret::after {
@@ -209,7 +201,7 @@ Tailwind builds CSS in this order:
 /* dark-mode overrides using raw CSS */
 /* animations */
 .icon {
-  @apply mr-2 mb-1 inline text-(--primary-pink);
+  @apply text-primary-pink mr-2 mb-1 inline;
 }
 
 .postponed,
@@ -226,11 +218,17 @@ Tailwind builds CSS in this order:
 }
 
 button.postpone {
-  @apply bg-yellow-500 text-neutral-600;
+  @apply bg-white font-semibold text-neutral-600 ring-2 ring-yellow-600 ring-inset;
+}
+button.postpone:hover {
+  @apply bg-yellow-200 text-neutral-600 ring-yellow-700;
 }
 
 button.cancel {
-  @apply bg-red-700;
+  @apply bg-white font-semibold text-neutral-800 ring-2 ring-red-700 ring-inset;
+}
+button.cancel:hover {
+  @apply bg-red-300 text-neutral-900 ring-red-800;
 }
 
 .delayedOrCancelled {
@@ -242,8 +240,7 @@ button.cancel {
 }
 
 .dark .logo {
-  background-color: rgb(from var(--primary-pink) r g b / 0.9);
-  @apply text-neutral-900;
+  @apply bg-primary-pink/90 text-neutral-900;
 }
 
 .dark header,
@@ -286,9 +283,12 @@ label.required::after {
   @apply bg-white p-1 text-sm;
 }
 
-.tableHeading > div {
-  @apply font-bold text-black;
-  background-color: rgb(from var(--primary-pink) r g b / 0.5);
+.tableHeading.pink > div {
+  @apply bg-primary-pink/50 font-bold text-black;
+}
+
+.tableHeading.orange > div {
+  @apply bg-primary-orange/50 font-bold text-black;
 }
 
 input[type="file"] {
@@ -297,10 +297,10 @@ input[type="file"] {
   box-shadow: none;
 
   &::file-selector-button {
-    @apply ml-0 inline h-6 w-auto rounded-md border border-neutral-100 bg-(--primary-pink) px-1 py-1 text-sm text-nowrap text-neutral-100 shadow-inner focus:ring-2 focus:ring-neutral-300 active:bg-stone-300 disabled:cursor-not-allowed md:h-8 md:px-4 md:text-base;
+    @apply bg-primary-pink ml-0 inline h-6 w-auto rounded-md border border-neutral-100 px-1 py-1 text-sm text-nowrap text-neutral-100 shadow-inner focus:ring-2 focus:ring-neutral-300 active:bg-stone-300 disabled:cursor-not-allowed md:h-8 md:px-4 md:text-base;
 
     &:hover {
-      background-color: var(--primary-pink);
+      @apply bg-primary-pink;
     }
   }
 }
@@ -352,7 +352,7 @@ input[type="file"] {
   width: 6rem;
   height: 6rem;
   border-radius: 50%;
-  background: conic-gradient(#0000 10%, var(--primary-pink));
+  background: conic-gradient(#0000 10%, var(--color-primary-pink));
   mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
   -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
   animation: rotate 1.5s infinite linear;
@@ -368,4 +368,17 @@ input[type="file"] {
   margin: 2.5rem;
   height: calc(100vh - 5rem);
   background-color: white;
+}
+
+button.filter-button {
+  @apply bg-neutral-300 text-neutral-400;
+}
+
+button.filter-button:active,
+button.filter-button.active {
+  @apply text-primary-orange bg-white;
+}
+
+button.filter-button.active {
+  @apply ring-primary-orange font-semibold ring-1 ring-inset;
 }

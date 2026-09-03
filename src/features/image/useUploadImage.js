@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast"
 export function useUploadImage() {
     const queryClient = useQueryClient();
 
-    const { isLoading: isUploading, mutate: uploadImage } = useMutation({
+    const { isPending: isUploading, mutate: uploadImage } = useMutation({
         mutationFn: ({ image }) => uploadImageApi({ image })
         ,
         onError: (err) => {

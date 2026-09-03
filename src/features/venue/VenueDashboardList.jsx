@@ -3,7 +3,7 @@ import VenueDashboardItem from "./VenueDashboardItem";
 function VenueDashboardList({ venues }) {
   return (
     <>
-      <div className="tableHeading contents">
+      <div className="tableHeading pink contents">
         <div>Name</div>
         <div>Address</div>
         <div>Phone</div>

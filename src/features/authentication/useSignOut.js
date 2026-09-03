@@ -8,7 +8,7 @@ export function useSignOut() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
 
-    const { mutate: signOut, isLoading } = useMutation({
+    const { mutate: signOut, isPending } = useMutation({
 
         mutationFn: signOutApi,
         mutationKey: ["user"],
@@ -22,5 +22,5 @@ export function useSignOut() {
         }
     })
 
-    return { signOut, isLoading }
+    return { signOut, isPending }
 }

@@ -4,6 +4,7 @@ function Button({
   onClick,
   children,
   type = "submit",
+  className = "",
 }) {
   const sizeClass = size === "small" ? "small" : "normal";
   const colorClass = color;
@@ -12,12 +13,12 @@ function Button({
   //     : color === "secondary"
   //       ? "secondary"
   //       : "primary";
-  const className = `${colorClass} ${sizeClass}`;
+  const buttonClassName = `${colorClass} ${sizeClass} ${className}`.trim();
 
   return (
     <button
       type={type}
-      className={className}
+      className={buttonClassName}
       onClick={() => {
         onClick?.();
       }}

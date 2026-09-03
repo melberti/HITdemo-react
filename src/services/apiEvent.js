@@ -21,7 +21,7 @@ export async function getEventsCurrent() {
 
   if (error) {
     if (error.message.includes('aborted')) {
-      console.log('Request was canceled');
+      //console.log('Request was canceled');
     }
     else {
       console.error(error);
@@ -33,14 +33,15 @@ export async function getEventsCurrent() {
 }
 
 
-export async function getMyEvents() {
+export async function getMyEvents(filters) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  let { data, error } = await supabase
+  //dynamic query
+  let query = supabase
     .from('event')
     .select(`
-    id, title, description, eventDate, eventStartTime, eventEndTime, cost, imageUrl, isPostponed, isCancelled,
+    id, title, description, eventDate, eventStartTime, eventEndTime, cost, imageUrl, isPostponed, isCancelled, eventUrl,
     venue (
       id, name, city, state
     ),
@@ -48,7 +49,25 @@ export async function getMyEvents() {
     id, value)
     `)
     .eq('userId', user.id)
-    .order('eventDate, eventStartTime', { ascending: true }) // Soonest first
+
+  //add filter conditions
+  if (filters && filters.length) {
+    //hardcoded EQ
+    //query = query.eq(filter.field, filter.value);
+
+    //using dynamic method/operator as well
+    filters.map((f) => {
+      if (f?.method) {
+        //console.log(`query.${f.method}(${f.field},${f.value})`)
+        query = query[f.method || "eq"](f.field, f.value);
+      }
+    })
+  }
+
+  //sort
+  query = query.order('eventDate, eventStartTime', { ascending: true }) // Soonest first
+
+  const { data, error, count } = await query;
 
   if (error) {
     throw new Error(error);
@@ -98,11 +117,9 @@ export async function addEvent({
 
 export async function updateEvent(event) {
 
-  console.log('api, eventId', event.id);
-
   const { data, error: eventError } = await supabase
     .from('event')
-    .update({ cost: event.cost, description: event.description, eventDate: event.eventDate, eventStartTime: event.eventStartTime, eventEndTime: event.eventEndTime, imageUrl: event.imageUrl, isCancelled: event.isCancelled, isPostponed: event.isPostponed, title: event.title, categoryId: event.categoryId, venueId: event.venueId })
+    .update({ cost: event.cost, description: event.description, eventDate: event.eventDate, eventStartTime: event.eventStartTime, eventEndTime: event.eventEndTime, imageUrl: event.imageUrl, isCancelled: event.isCancelled, isPostponed: event.isPostponed, title: event.title, categoryId: event.categoryId, venueId: event.venueId, eventUrl: event.eventUrl })
     .eq("id", event.id)
     .select()
 
@@ -111,7 +128,6 @@ export async function updateEvent(event) {
     throw new Error("Event not updated");
   }
 
-  console.log('api data after update', data)
 
 }
 
@@ -177,3 +193,10 @@ export async function postDateEvents() {
 //   // Logical operators
 //   .not('column', 'like', 'Negate filter')
 //   .or('some_column.eq.Some value, other_column.eq.Other value')
+
+
+
+
+
+
+

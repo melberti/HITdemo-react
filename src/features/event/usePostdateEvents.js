@@ -6,7 +6,7 @@ export function usePostdateEvents() {
 
     const queryClient = useQueryClient();
 
-    const { isLoading: isUpdating, mutate: postDateEvents } = useMutation({
+    const { isPending: isUpdating, mutate: postDateEvents } = useMutation({
         mutationFn: postDateEventsApi,
         onSuccess: () => {
             queryClient.invalidateQueries(["events"]);

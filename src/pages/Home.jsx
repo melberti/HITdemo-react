@@ -1,4 +1,4 @@
-import EventsFilter from "../features/event/EventsFilter";
+import EventsFilter from "../ui/EventsFilter";
 import EventsGrid from "../features/event/EventsGrid";
 import { Link } from "react-router";
 import { usePostdateEvents } from "../features/event/usePostdateEvents";

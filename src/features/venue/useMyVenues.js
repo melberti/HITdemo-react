@@ -10,7 +10,6 @@ export function useMyVenues() {
 
     if (isError) {
         toast.error(error);
-        console.log(error);
     }
 
     return { venues, isLoading }
