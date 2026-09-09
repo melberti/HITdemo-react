@@ -11,16 +11,14 @@ import { AuthTimeoutProvider } from "./context/AuthTimeoutContext";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import AppLayout from "./ui/AppLayout";
 import SpinnerFullPage from "./ui/SpinnerFullPage";
-import Home from "./pages/Home";
-import Profile from "./pages/Profile";
-//const Home = lazy(() => import("./pages/Home"));
+const Home = lazy(() => import("./pages/Home"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const SignIn = lazy(() => import("./pages/SignIn"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const AddEvent = lazy(() => import("./pages/AddEvent"));
 const AddVenue = lazy(() => import("./pages/AddVenue"));
 const AddImage = lazy(() => import("./pages/AddImage"));
-//const Profile = lazy(() => import("./pages/Profile"));
+const Profile = lazy(() => import("./pages/Profile"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient({
