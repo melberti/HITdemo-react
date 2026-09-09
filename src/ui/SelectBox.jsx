@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function SelectBox({
   options,
@@ -9,8 +9,6 @@ function SelectBox({
   isRequired = false,
   labelFor,
   isNumericValue = false,
-  minNumericValue = 0,
-  maxNumericValue = 1000,
   register,
   width,
   icon,
@@ -18,11 +16,11 @@ function SelectBox({
   defaultValue,
   hideEmpty = false,
 }) {
-  const defaultState = isNumericValue ? 0 : null;
+  const defaultState = isNumericValue ? 0 : "";
   const [selectedVal, setSelectedVal] = useState(defaultState);
 
   //if a default value was passed (as on edit), set into state
-  const selected = defaultValue ? defaultValue : selectedVal;
+  const selected = defaultValue ? defaultValue : selectedVal.toString();
 
   //for select box width
   const widthStyle = width === null ? undefined : { width: `${width}px` };
@@ -36,27 +34,33 @@ function SelectBox({
     onChange?.(e);
   }
 
+  const registration = register(labelFor, {
+    required: isRequired ? "Required" : false,
+    validate: (value) => {
+      if (isNumericValue) {
+        if (parseInt(value, 10) === 0) return "You must select a value";
+      } else if (isRequired && value === "") return "You must select a value";
+      else return customValidation?.() || true;
+    },
+  });
+
   return (
     <>
       <select
-        defaultValue={selected}
+        id={labelFor}
         className={marginStyle}
         style={widthStyle}
-        {...register(labelFor, {
-          required: isRequired ? "Required" : false,
-          validate: (value) => {
-            if (isNumericValue) {
-              // Regex checking if the value contains only digits (optional negative sign)
-              if (value === "0") return "You must select a value";
-            } else if (isRequired && value === "")
-              return "You must select a value";
-            else return customValidation?.() || true;
-            //return true; //if not numeric or numeric validation passed
-          },
-        })}
-        onChange={(e) => handleChange(e)}
+        value={selected}
+        // defaultValue={selected}
+        {...registration}
+        onChange={(e) => {
+          registration.onChange(e);
+          handleChange(e);
+        }}
       >
-        {!hideEmpty && <option value={isNumericValue ? 0 : ""}>SELECT</option>}
+        {!hideEmpty && (
+          <option value={isNumericValue ? "0" : ""}>SELECT</option>
+        )}
 
         {options.map((opt) => (
           <option value={opt[valueKeyName]} key={opt[keyName]}>

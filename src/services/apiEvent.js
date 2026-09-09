@@ -1,19 +1,23 @@
 import supabase from "./supabase";
+import { getTodayAsISO } from "../utilities/dateTimeFormats";
 
 export async function getEventsCurrent() {
 
   const controller = new AbortController();
+  const today = getTodayAsISO();
 
   let { data, error } = await supabase
     .from('event')
     .select(`
     id, title, description, eventDate, eventStartTime, eventEndTime, cost, imageUrl, isPostponed, isCancelled, eventUrl,
     venue (
-      id, name, address1, city, state, zipCode, url, phone
+      id, name, address1, city, state, zipCode, url, phone, isRetired
     ),
     category (
     id, value)
-  `).order('eventDate, eventStartTime', { ascending: true }) // Newest first
+  `)
+    .gte('eventDate', today)
+    .order('eventDate, eventStartTime', { ascending: true }) // Newest first
     .abortSignal(controller.signal); // Bind the signal
 
   //not sure I need to use this controller signal just yet

@@ -66,3 +66,29 @@ export async function signOut() {
   return;
 
 }
+
+
+
+export async function updateUser({ firstName, lastName, email }) {
+  //maybe someday email?
+  //not likely for password
+
+  const { data, error } = await supabase.auth.updateUser({
+    email,
+    // password: "new-password",
+    data: {
+      firstName: firstName,
+      lastName: lastName
+    }
+
+  })
+
+
+  if (error) {
+    throw new Error(error.message);
+
+  }
+
+  console.log('api post update data:', data)
+  return data;
+}

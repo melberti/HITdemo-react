@@ -3,11 +3,13 @@ import { useNavigate } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { addEvent as addEventApi } from "../../services/apiEvent"
 import { defaultDashboardUrl } from "../../utilities/utilities"
+import { useEventVenue } from "../../context/EventVenueContext";
 
 export function useAddEvent() {
 
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const { setVenueId } = useEventVenue();
 
     const { mutate: addEvent, isPending: isAdding } = useMutation({
         mutationFn: ({
@@ -40,6 +42,7 @@ export function useAddEvent() {
             toast.success("Event added");
             queryClient.invalidateQueries(["myEvents"])
             queryClient.invalidateQueries(["events"])
+            setVenueId("");
             navigate(defaultDashboardUrl)
         }
 

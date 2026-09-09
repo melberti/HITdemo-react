@@ -1,6 +1,15 @@
+function parseDateValue(value) {
+  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const [year, month, day] = value.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  return new Date(value);
+}
+
 export function formatWithLongDay(date) {
 
-  const dateToFormat = new Date(date);
+  const dateToFormat = parseDateValue(date);
 
   const options = {
     weekday: "long",
@@ -20,7 +29,7 @@ export function formatWithLongDay(date) {
 
 export function formatShortDate(date) {
 
-  const dateToFormat = new Date(date);
+  const dateToFormat = parseDateValue(date);
 
   const options = {
     month: '2-digit',
@@ -38,7 +47,7 @@ export function formatShortDate(date) {
 
 export function formatWithDayShortMonth(date) {
 
-  const dateToFormat = new Date(date);
+  const dateToFormat = parseDateValue(date);
 
   const options = {
     weekday: "short",
@@ -71,5 +80,11 @@ export function formatTime(time) {
 }
 
 export function getTodayAsISO() {
-  return new Date().toISOString().split('T')[0]
+  const today = new Date();
+
+  return [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, "0"),
+    String(today.getDate()).padStart(2, "0"),
+  ].join("-");
 }

@@ -104,11 +104,14 @@ Tailwind builds CSS in this order:
 /* dark-mode overrides using raw CSS need no @layer */
 @layer components {
   .inputDiv {
-    @apply mt-5 grid grid-cols-[150px_1fr] items-center gap-4 wrap-break-word;
+    @apply mt-5 grid grid-cols-[140px_1fr] items-center gap-4 wrap-break-word;
     min-height: fit-content;
     justify-content: flex-start;
   }
 
+  .inputDiv > label {
+    white-space: nowrap;
+  }
   .logo {
     @apply bg-primary-pink flex items-center p-3 text-xl sm:text-2xl md:text-4xl lg:text-5xl;
 
@@ -159,6 +162,10 @@ Tailwind builds CSS in this order:
     @apply bg-neutral-400;
   }
 
+  button.invisible {
+    @apply invisible;
+  }
+
   button.small,
   .button.small {
     @apply h-6 px-2 text-sm md:h-8;
@@ -174,7 +181,15 @@ Tailwind builds CSS in this order:
   }
 
   .filter {
-    @apply bg-primary-orange flex overflow-x-hidden px-3 py-2 uppercase;
+    @apply flex overflow-x-hidden px-3 py-2 uppercase;
+  }
+
+  .filter.orange {
+    @apply bg-primary-orange;
+  }
+
+  .filter.pink {
+    @apply bg-primary-pink text-neutral-200;
   }
 
   .textPink,
@@ -191,7 +206,7 @@ Tailwind builds CSS in this order:
     @apply pt-1 text-neutral-100;
   }
 
-  a.dashboard {
+  a.header {
     color: white;
     text-decoration: underline;
   }

@@ -8,33 +8,78 @@ import {
 } from "../utilities/utilities";
 import { formatPhoneNumber } from "../utilities/utilities";
 import { useAddVenue } from "../features/venue/useAddVenue";
+import { useUpdateVenue } from "../features/venue/useUpdateVenue";
+import { useStates } from "../features/venue/useStates";
+import SelectBox from "../ui/SelectBox";
 import FormContainer from "../ui/FormContainer";
 import FormButtonRow from "../ui/FormButtonRow";
 import SubmitButton from "../ui/SubmitButton";
 import ResetButton from "../ui/ResetButton";
 import Button from "../ui/Button";
 import InputDiv from "../ui/InputDiv";
-import SelectState from "../ui/SelectState";
+import Spinner from "../ui/Spinner";
 
-function AddVenue() {
-  const { register, handleSubmit, formState, clearErrors, reset } = useForm();
+function AddVenue({ venue, onCloseModal, beforeOnClose }) {
+  const isModal = Boolean(onCloseModal);
+
+  const { register, handleSubmit, formState, reset } = useForm();
   const { errors } = formState;
 
   const { isAdding, addVenue } = useAddVenue();
+  const { isUpdating, updateVenue } = useUpdateVenue();
+  const { states, isLoading } = useStates();
 
   const navigate = useNavigate();
 
-  function close() {
-    navigate(defaultDashboardUrl);
-  }
+  function invalidSubmit(validationErrors) {}
 
   function submitFunc(data) {
-    if (!errors.length) {
-      const { name, address1, city, state, zipCode, url, phone } = data;
-      addVenue({ name, address1, city, state, zipCode, url, phone });
+    const { id, name, address1, city, state, zipCode, url, phone } = data;
+
+    if (id) {
+      updateVenue(
+        {
+          id,
+          name,
+          address1,
+          city,
+          state,
+          zipCode,
+          url,
+          phone,
+          isRetired: false,
+        },
+        {
+          onSuccess: () => close(),
+        },
+      );
     } else {
-      console.log(errors);
-      return errors;
+      addVenue(
+        {
+          name,
+          address1,
+          city,
+          state,
+          zipCode,
+          url,
+          phone,
+          isRetired: false,
+        },
+        {
+          onSuccess: (newVenue) => {
+            beforeOnClose(newVenue.id);
+            close();
+          },
+        },
+      );
+    }
+  }
+
+  function close() {
+    if (isModal) {
+      onCloseModal();
+    } else {
+      navigate(defaultDashboardUrl);
     }
   }
 
@@ -43,11 +88,24 @@ function AddVenue() {
     e.target.value = formatted;
   };
 
+  const disabled = isAdding || isUpdating || isLoading;
+
+  if (disabled) return <Spinner />;
+
   return (
     <>
       <h2 className="mb-5 text-center">Add Venue</h2>
-      <form onSubmit={handleSubmit(submitFunc)}>
+      {/* fancy onSubmit; we need to stop the form post from propagating up to the AddEvent page when opened in a modal */}
+      <form
+        onSubmit={(event) => {
+          event.stopPropagation();
+          handleSubmit(submitFunc, invalidSubmit)(event);
+        }}
+      >
         <FormContainer>
+          {venue && (
+            <input type="hidden" id="id" value={venue.id} {...register("id")} />
+          )}
           <InputDiv
             label="Name"
             labelFor="name"
@@ -58,7 +116,8 @@ function AddVenue() {
               type="text"
               id="name"
               {...register("name", { required: "Required" })}
-              disabled={isAdding}
+              disabled={disabled}
+              defaultValue={venue?.name}
             />
           </InputDiv>
 
@@ -72,7 +131,8 @@ function AddVenue() {
               type="text"
               id="address1"
               {...register("address1", { required: "Required" })}
-              disabled={isAdding}
+              disabled={disabled}
+              defaultValue={venue?.address1}
             />
           </InputDiv>
 
@@ -86,7 +146,8 @@ function AddVenue() {
               type="text"
               id="city"
               {...register("city", { required: "Required" })}
-              disabled={isAdding}
+              disabled={disabled}
+              defaultValue={venue?.city}
             />
           </InputDiv>
 
@@ -96,11 +157,17 @@ function AddVenue() {
             error={errors?.state?.message}
             required={true}
           >
-            <SelectState
+            <SelectBox
+              keyName="id"
+              valueKeyName="abv"
+              textKeyName="name"
+              options={states}
               isRequired={true}
+              isNumericValue={false}
               labelFor="state"
+              onChange={() => {}}
               register={register}
-              disabled={isAdding}
+              defaultValue={venue?.state}
             />
           </InputDiv>
 
@@ -113,9 +180,11 @@ function AddVenue() {
             <input
               type="text"
               id="zipCode"
+              maxLength={5}
               inputMode="numeric"
               placeholder="99999"
-              disabled={isAdding}
+              disabled={disabled}
+              defaultValue={venue?.zipCode}
               {...register("zipCode", {
                 required: "Required",
                 pattern: {
@@ -144,7 +213,8 @@ function AddVenue() {
               type="phone"
               id="phone"
               placeholder="999-999-9999"
-              disabled={isAdding}
+              disabled={disabled}
+              defaultValue={formatPhoneNumber(venue?.phone)}
               {...register("phone", {
                 required: "Required",
                 pattern: {
@@ -164,7 +234,8 @@ function AddVenue() {
             <input
               type="text"
               id="url"
-              disabled={isAdding}
+              disabled={disabled}
+              defaultValue={venue?.url}
               {...register("url", {
                 required: false,
                 pattern: {
@@ -175,9 +246,11 @@ function AddVenue() {
             />
           </InputDiv>
           <FormButtonRow>
-            <SubmitButton disabled={isAdding}>Submit Venue</SubmitButton>
-            <ResetButton disabled={isAdding} onClick={reset} />
-            <Button color="neutral" disabled={isAdding} onClick={close}>
+            <SubmitButton disabled={disabled}>
+              {venue?.id ? "Update" : "Submit"} Venue
+            </SubmitButton>
+            <ResetButton disabled={disabled} onClick={reset} />
+            <Button color="neutral" disabled={disabled} onClick={close}>
               Cancel
             </Button>
           </FormButtonRow>

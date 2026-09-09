@@ -3,8 +3,8 @@ import { useMyEvents } from "./useMyEvents";
 import Spinner from "../../ui/Spinner";
 import EventDashboardList from "./EventDashboardList";
 import Button from "../../ui/Button";
-import EventsFilter from "../../ui/EventsFilter";
-import Filter from "../../ui/Filter";
+import StringFilter from "../../ui/StringFilter";
+import ButtonFilter from "../../ui/ButtonFilter";
 import NoEventsFound from "./NoEventsFound";
 import { useEventFilter } from "../../context/EventFilterContext";
 
@@ -16,17 +16,18 @@ function EventDashboard() {
     sortDir: "asc",
   });
 
-  const { filter } = useEventFilter(); //filter set to lowercase in EventsFilter at time of set
+  const { eventFilter, setEventFilter } = useEventFilter();
+
   let displayEvents;
 
-  if (filter) {
+  if (eventFilter) {
     displayEvents = events.filter(
       (event) =>
-        event?.title?.toLowerCase().includes(filter) ||
-        event?.venue?.name?.toLowerCase().includes(filter) ||
-        event?.venue?.city?.toLowerCase().includes(filter) ||
-        event?.description?.toLowerCase().includes(filter) ||
-        event?.category?.value?.toLowerCase().includes(filter),
+        event?.title?.toLowerCase().includes(eventFilter) ||
+        event?.venue?.name?.toLowerCase().includes(eventFilter) ||
+        event?.venue?.city?.toLowerCase().includes(eventFilter) ||
+        event?.description?.toLowerCase().includes(eventFilter) ||
+        event?.category?.value?.toLowerCase().includes(eventFilter),
     );
   } else displayEvents = events;
 
@@ -44,9 +45,16 @@ function EventDashboard() {
         >
           Add Event
         </Button>
-        <EventsFilter fullWidth={false} />
-        <div className="content pl-5 filter">
-          <Filter
+        <StringFilter
+          fullWidth={false}
+          filter={eventFilter}
+          setFilter={setEventFilter}
+          placeholderText="Begin typing event name or performer or venue or category or city"
+          color="orange"
+        />
+
+        <div className="content orange pl-5 filter">
+          <ButtonFilter
             buttonSize="small"
             options={[
               { value: "past", label: "Past" },
@@ -55,8 +63,8 @@ function EventDashboard() {
             filterValue="eventDate"
           />
         </div>
-        <div className="content pl-5 filter">
-          <Filter
+        <div className="content orange pl-5 filter">
+          <ButtonFilter
             buttonSize="small"
             options={[
               { value: "all", label: "All" },

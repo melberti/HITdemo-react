@@ -4,7 +4,7 @@ import { getVenues as getVenuesApi } from "../../services/apiVenue";
 
 export function useVenues() {
     const { data: venues, isLoading, error } = useQuery({
-        queryFn: getVenuesApi(),
+        queryFn: getVenuesApi,
         queryKey: ["venues"]
     })
 

@@ -7,17 +7,17 @@ import { useEventFilter } from "../../context/EventFilterContext";
 function EventsGrid() {
   const { events, isLoading } = useEvents();
 
-  const { filter } = useEventFilter(); //filter set to lowercase in EventsFilter at time of set
+  const { eventFilter } = useEventFilter(); //filter set to lowercase in EventsFilter at time of set
   let displayEvents;
 
-  if (filter) {
+  if (eventFilter) {
     displayEvents = events.filter(
       (event) =>
-        event?.title?.toLowerCase().includes(filter) ||
-        event?.venue?.name?.toLowerCase().includes(filter) ||
-        event?.venue?.city?.toLowerCase().includes(filter) ||
-        event?.description?.toLowerCase().includes(filter) ||
-        event?.category?.value?.toLowerCase().includes(filter),
+        event?.title?.toLowerCase().includes(eventFilter) ||
+        event?.venue?.name?.toLowerCase().includes(eventFilter) ||
+        event?.venue?.city?.toLowerCase().includes(eventFilter) ||
+        event?.description?.toLowerCase().includes(eventFilter) ||
+        event?.category?.value?.toLowerCase().includes(eventFilter),
     );
   } else displayEvents = events;
 

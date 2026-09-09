@@ -9,6 +9,7 @@ function VenueDashboardList({ venues }) {
         <div>Phone</div>
         <div>Url</div>
         <div>Create Date</div>
+        <div>Action</div>
       </div>
       {venues.map((venue) => (
         <VenueDashboardItem venue={venue} key={venue.id} />

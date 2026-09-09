@@ -2,23 +2,22 @@ import { useContext, createContext, useState } from "react";
 
 const EventFilterContext = createContext();
 
-function EventFilterProvider({children}) 
-{
- 
-    const [filter, setFilter] = useState("");
+function EventFilterProvider({ children }) {
+  const [eventFilter, setEventFilter] = useState("");
 
-    return <EventFilterContext.Provider value={{filter, setFilter}}>{children}</EventFilterContext.Provider>
-
+  return (
+    <EventFilterContext.Provider value={{ eventFilter, setEventFilter }}>
+      {children}
+    </EventFilterContext.Provider>
+  );
 }
 
-function useEventFilter()
-{
-    const context = useContext(EventFilterContext)
-    if(context === undefined)     
-        throw new Error("Event Filter was used outside of EventFilterContext");
+function useEventFilter() {
+  const context = useContext(EventFilterContext);
+  if (context === undefined)
+    throw new Error("Event Filter was used outside of EventFilterContext");
 
-return context;
+  return context;
+}
 
-} 
-
-export {useEventFilter, EventFilterProvider};
+export { useEventFilter, EventFilterProvider };

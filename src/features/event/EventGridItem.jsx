@@ -24,7 +24,7 @@ function EventGridItem({ event, isCancelled = false, isPostponed = false }) {
     cost,
   } = event;
 
-  const reduceVisibility = isPostponed || isCancelled;
+  const reduceVisibility = isPostponed || isCancelled || venue.isRetired;
   const reduceVisibilityClass = reduceVisibility ? "delayedOrCancelled" : "";
 
   return (
@@ -33,7 +33,7 @@ function EventGridItem({ event, isCancelled = false, isPostponed = false }) {
         <li className="relative flex flex-col overflow-hidden border-2 border-neutral-300 p-2">
           <EventOverlay
             isPostponed={event.isPostponed}
-            isCancelled={event.isCancelled}
+            isCancelled={event.isCancelled || event.venue.isRetired}
           />
           <img
             src={imageUrl ? imageUrl : defaultImageUrl}

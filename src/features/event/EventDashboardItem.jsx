@@ -90,14 +90,19 @@ function EventDashboardItem({ event }) {
           </Modal.Open>
 
           {eventDateForCompare >= today &&
-            !event.isPostponed &&
-            !event.isCancelled && (
-              <Modal.Open opens="postpone">
-                <Button size="small" color="postpone" type="button">
-                  Postpone
-                </Button>
-              </Modal.Open>
-            )}
+          !event.isPostponed &&
+          !event.isCancelled ? (
+            <Modal.Open opens="postpone">
+              <Button size="small" color="postpone" type="button">
+                Postpone
+              </Button>
+            </Modal.Open>
+          ) : (
+            // using invisible style to retain exact spacing when real Postpone button is not available
+            <Button size="small" color="invisible">
+              Postpone
+            </Button>
+          )}
           {eventDateForCompare >= today && !event.isCancelled && (
             <Modal.Open opens="cancel">
               <Button color="cancel" size="small" type="button">

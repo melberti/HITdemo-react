@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import Button from "./Button";
 
-function Filter({ filterValue, options, buttonSize = "normal" }) {
+function ButtonFilter({ filterValue, options, buttonSize = "normal" }) {
   //filterValue is URL key
   //options will be a list of possible filters
   //each will have label, value
@@ -39,4 +39,4 @@ function Filter({ filterValue, options, buttonSize = "normal" }) {
   );
 }
 
-export default Filter;
+export default ButtonFilter;

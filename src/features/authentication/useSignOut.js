@@ -18,6 +18,7 @@ export function useSignOut() {
         },
         onSuccess: () => {
             queryClient.removeQueries();
+
             navigate("/", { replace: true });
         }
     })
