@@ -14,7 +14,7 @@ function Logo() {
           <img src="./logo_inverse.png" width="90px" height="85" />
         )}
       </Link>
-      <span>Hear. There. Everywhere.</span>
+      <Link to="/">Hear. There. Everywhere.</Link>
     </section>
   );
 }
