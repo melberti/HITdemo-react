@@ -156,6 +156,7 @@ function SignUp() {
               color="neutral"
               disabled={isPending}
               onClick={() => close()}
+              type="button"
             >
               Cancel
             </Button>

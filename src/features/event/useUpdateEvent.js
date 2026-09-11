@@ -15,9 +15,7 @@ export function useUpdateEvent() {
             toast.success("Event updated");
             setVenueId("");
         },
-        // onMutate: (variables) => {
-        //     console.log('mutating, vars=', variables)
-        // }
+
     })
 
     return { updateEvent, isUpdating }

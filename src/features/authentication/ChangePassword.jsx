@@ -1,4 +1,6 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
+import { useUpdatePassword } from "./useUpdatePassword";
 import InputDiv from "../../ui/InputDiv";
 import Button from "../../ui/Button";
 import SubmitButton from "../../ui/SubmitButton";
@@ -9,44 +11,48 @@ import FormContainer from "../../ui/FormContainer";
 function ChangePassword() {
   const { formState, reset, handleSubmit, register, getValues } = useForm();
   const { errors } = formState;
+  const navigate = useNavigate();
 
-  function submitFunc() {
-    alert("This functionality is work in progress");
+  const { updatePassword, isUpdating } = useUpdatePassword();
+
+  function submitFunc(data) {
+    const { currentPassword, newPassword } = data;
+    updatePassword(
+      { currentPassword, newPassword },
+      { onSuccess: () => navigate("/dashboard") },
+    );
   }
 
-  //todo; replace
-  const isPending = false;
+  function cancel() {
+    navigate("/dashboard");
+  }
 
   return (
     <>
       <h3 className="mx-auto mt-15 w-110 border-t-4 border-t-neutral-300 pt-3 text-center">
         Change Password
       </h3>
-      <p className="max-w-auto text-center">
-        <span className="font-bold">NOTE:</span> This form is a work in
-        progress.
-      </p>
 
       <form onSubmit={handleSubmit(submitFunc)}>
         <FormContainer>
           <InputDiv
-            labelFor="password"
+            labelFor="currentPassword"
             label="Current Password"
-            error={errors?.password?.message}
+            error={errors?.currentPassword?.message}
             required={true}
           >
             <input
-              id="password"
+              id="currentPassword"
               type="password"
               required
-              {...register("password", {
+              {...register("currentPassword", {
                 required: true,
                 minLength: {
                   value: 8,
                   message: "Must be at least 8 characters",
                 },
               })}
-              disabled={isPending}
+              disabled={isUpdating}
             />
           </InputDiv>
 
@@ -67,7 +73,7 @@ function ChangePassword() {
                   message: "Must be at least 8 characters",
                 },
               })}
-              disabled={isPending}
+              disabled={isUpdating}
             />
           </InputDiv>
 
@@ -83,20 +89,21 @@ function ChangePassword() {
               required
               {...register("confirmPassword", {
                 validate: (value) =>
-                  value === getValues().password ||
+                  value === getValues().newPassword ||
                   "Repeat password not matched",
               })}
-              disabled={isPending}
+              disabled={isUpdating}
             />
           </InputDiv>
 
           <FormButtonRow>
-            <SubmitButton disabled={isPending}>Change Password</SubmitButton>
-            <ResetButton disabled={isPending} onClick={reset} />
+            <SubmitButton disabled={isUpdating}>Change Password</SubmitButton>
+            <ResetButton disabled={isUpdating} onClick={reset} />
             <Button
               color="neutral"
-              disabled={isPending}
-              onClick={() => close()}
+              disabled={isUpdating}
+              onClick={() => cancel()}
+              type="button"
             >
               Cancel
             </Button>

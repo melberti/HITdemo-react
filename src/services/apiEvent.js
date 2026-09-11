@@ -37,7 +37,7 @@ export async function getEventsCurrent() {
 }
 
 
-export async function getMyEvents(filters) {
+export async function getMyEvents(dateFilters) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -55,12 +55,12 @@ export async function getMyEvents(filters) {
     .eq('userId', user.id)
 
   //add filter conditions
-  if (filters && filters.length) {
+  if (dateFilters && dateFilters.length) {
     //hardcoded EQ
     //query = query.eq(filter.field, filter.value);
 
     //using dynamic method/operator as well
-    filters.map((f) => {
+    dateFilters.map((f) => {
       if (f?.method) {
         //console.log(`query.${f.method}(${f.field},${f.value})`)
         query = query[f.method || "eq"](f.field, f.value);
@@ -71,7 +71,7 @@ export async function getMyEvents(filters) {
   //sort
   query = query.order('eventDate, eventStartTime', { ascending: true }) // Soonest first
 
-  const { data, error, count } = await query;
+  const { data, error } = await query;
 
   if (error) {
     throw new Error(error);
@@ -131,7 +131,6 @@ export async function updateEvent(event) {
     console.error(eventError);
     throw new Error("Event not updated");
   }
-
 
 }
 

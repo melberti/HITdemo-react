@@ -1,5 +1,11 @@
 function Empty({ resource }) {
-  return <p>No {resource} could be found.</p>;
+  return (
+    <>
+      <div className="absolute left-0 w-full self-center text-center">
+        No {resource} found.
+      </div>
+    </>
+  );
 }
 
 export default Empty;

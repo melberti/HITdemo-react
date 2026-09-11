@@ -1,20 +1,25 @@
 import { HiOutlineCursorClick } from "react-icons/hi";
+import { useMedia } from "../../context/MediaQueryContext";
 
 import EventDashboardItem from "./EventDashboardItem";
 
 function EventDashboardList({ events }) {
+  const { isSmall, isMedium, isLarge } = useMedia();
+
   return (
     <>
       <div className="tableHeading orange contents">
         <div>Date</div>
         <div>Title</div>
         <div>Venue</div>
-        <div>Category</div>
-        <div>Cost</div>
-        <div>
-          Image <HiOutlineCursorClick size={18} className="inline" />
-        </div>
-        <div>Status</div>
+        {isLarge && <div>Category</div>}
+        {!isSmall && <div>Cost</div>}
+        {isLarge && (
+          <div>
+            Image <HiOutlineCursorClick size={18} className="inline" />
+          </div>
+        )}
+        <div className="text-nowrap">Status</div>
         <div>Action</div>
       </div>
       {events.map((event) => (

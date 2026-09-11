@@ -160,6 +160,7 @@ function ImageUpload({ onCloseModal }) {
               color="neutral"
               disabled={isUploading}
               onClick={() => close()}
+              type="button"
             >
               Cancel
             </Button>

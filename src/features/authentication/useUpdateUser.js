@@ -13,7 +13,6 @@ export function useUpdateUser() {
             toast.success("Profile updated");
         },
         onError: (err) => { toast.error(err.message) },
-        //onMutate: (vars) => console.log(vars)
     })
 
     return { updateUser, isUpdating, error }

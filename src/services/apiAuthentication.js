@@ -33,6 +33,14 @@ export async function signIn({ email, password }) {
     throw new Error(error.message);
   }
 
+  //update user metadata email if not the same as user email 
+  //due to confirmed email change
+  if (data.user.email !== data.user.user_metadata.email) {
+    if (data.user.confirmed_at > data.user.confirmation_sent_at) {
+      updateMetadataEmail(data.user.email)
+    }
+  }
+
   return data;
 }
 
@@ -70,8 +78,6 @@ export async function signOut() {
 
 
 export async function updateUser({ firstName, lastName, email }) {
-  //maybe someday email?
-  //not likely for password
 
   const { data, error } = await supabase.auth.updateUser({
     email,
@@ -80,15 +86,43 @@ export async function updateUser({ firstName, lastName, email }) {
       firstName: firstName,
       lastName: lastName
     }
-
   })
-
 
   if (error) {
     throw new Error(error.message);
-
   }
 
-  console.log('api post update data:', data)
+  return data;
+}
+
+
+export async function updatePassword({ currentPassword, newPassword }) {
+
+  const { data, error } = await supabase.auth.updateUser({
+    current_password: currentPassword,
+    password: newPassword
+  })
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+
+export async function updateMetadataEmail(email) {
+
+  const { data, error } = await supabase.auth.updateUser({
+    data: {
+      email
+    }
+
+  })
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
   return data;
 }

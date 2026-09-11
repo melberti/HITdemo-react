@@ -67,6 +67,13 @@ function AddEvent({ event, onCloseModal }) {
     isLoadingCategories || isLoadingVenues || isAdding || isUpdating;
 
   const [venueId, setVenueId] = useState(() => event?.venue?.id ?? "");
+  const [status, setStatus] = useState(() =>
+    event?.isPostponed
+      ? "Postponed"
+      : event?.isCancelled
+        ? "Cancelld"
+        : "Active",
+  );
 
   //if editing (if we have an event)
   //set imageUrl to the event's image
@@ -244,6 +251,7 @@ function AddEvent({ event, onCloseModal }) {
                 required={true}
               >
                 <SelectBox
+                  key={status}
                   id="status"
                   defaultValue={selectedStatus}
                   register={register}
@@ -256,6 +264,7 @@ function AddEvent({ event, onCloseModal }) {
                   labelFor="status"
                   isNumericValue={false}
                   hideEmpty={true}
+                  onChange={(event) => setStatus(event.target.value)}
                 ></SelectBox>
               </InputDiv>
             )}
@@ -335,20 +344,22 @@ function AddEvent({ event, onCloseModal }) {
                   onChange={(event) => setVenueId(event.target.value)}
                 />
 
-                <ButtonFilter
-                  buttonSize="small"
-                  options={[
-                    { value: "my", label: "Mine" },
-                    { value: "all", label: "All" },
-                  ]}
-                  filterValue="selectVenues"
-                ></ButtonFilter>
+                <div className="flex flex-col">
+                  <ButtonFilter
+                    buttonSize="small"
+                    options={[
+                      { value: "my", label: "Mine" },
+                      { value: "all", label: "All" },
+                    ]}
+                    filterValue="selectVenues"
+                  ></ButtonFilter>
 
-                <Modal.Open opens="venue">
-                  <Button size="small" color="primary" type="button">
-                    New Venue
-                  </Button>
-                </Modal.Open>
+                  <Modal.Open opens="venue">
+                    <Button size="small" color="primary" type="button">
+                      New Venue
+                    </Button>
+                  </Modal.Open>
+                </div>
                 <Modal.Window name="venue">
                   <AddVenue beforeOnClose={handleVenueSelect} />
                 </Modal.Window>
@@ -502,7 +513,7 @@ function AddEvent({ event, onCloseModal }) {
                   />
                 )}
                 {!imageUrl && (
-                  <div className="grid grid-cols-1">
+                  <div className="ml-2 grid grid-cols-1">
                     <Modal.Open opens="select">
                       <Button
                         color="secondary"
@@ -535,7 +546,12 @@ function AddEvent({ event, onCloseModal }) {
                 {event?.id ? "Update" : "Submit"} Event
               </SubmitButton>
               <ResetButton disabled={isAdding} onClick={reset} />
-              <Button color="neutral" disabled={isAdding} onClick={close}>
+              <Button
+                color="neutral"
+                disabled={isAdding}
+                onClick={close}
+                type="button"
+              >
                 Cancel
               </Button>
             </FormButtonRow>

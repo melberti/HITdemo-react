@@ -16,52 +16,52 @@ function Header() {
   const navigate = useNavigate();
 
   return (
-    <header>
-      <Modal>
-        <Modal.Open opens="about">
-          <Button className="dashboard mr-auto" type="button" size="small">
-            About This Demo
-          </Button>
-        </Modal.Open>
-        <Modal.Window name="about">
-          <About />
-        </Modal.Window>
-      </Modal>
+    <>
+      <header>
+        <Modal>
+          <Modal.Open opens="about">
+            <Button className="dashboard mr-auto" type="button" size="small">
+              About This Demo
+            </Button>
+          </Modal.Open>
+          <Modal.Window name="about">
+            <About />
+          </Modal.Window>
+        </Modal>
+        <div className="m-0 p-0" title="Toggle DarkMode">
+          <CgDarkMode className="size-7 md:size-8" onClick={toggleDarkMode} />
+        </div>
 
-      <div>
-        <ScreenSizeLogger show={false} />
-      </div>
-      <div className="m-0 p-0" title="Toggle DarkMode">
-        <CgDarkMode size={40} onClick={toggleDarkMode} />
-      </div>
-
-      {user ? (
-        <>
-          <div>Welcome, {user.user_metadata.firstName}!</div>
-          <div className="border-r-2 border-white pr-4">
-            <Link to={defaultDashboardUrl} className="header">
-              My Dashboard
-            </Link>
-          </div>
-          <div>
-            <Link to="/profile" className="header">
-              Profile
-            </Link>
-          </div>
-          <Button size="small" color="primary" onClick={signOut}>
-            Sign Out
+        {user ? (
+          <>
+            <div>Welcome, {user.user_metadata.firstName}!</div>
+            <div>
+              <Link to="/profile" className="header">
+                Profile
+              </Link>
+            </div>
+            <div>|</div>
+            <div>
+              <Link to={defaultDashboardUrl} className="header">
+                Dashboard
+              </Link>
+            </div>
+            <Button size="small" color="primary" onClick={signOut}>
+              Sign Out
+            </Button>
+          </>
+        ) : (
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => navigate("/signin")}
+          >
+            Sign In
           </Button>
-        </>
-      ) : (
-        <Button
-          size="small"
-          color="primary"
-          onClick={() => navigate("/signin")}
-        >
-          Sign In
-        </Button>
-      )}
-    </header>
+        )}
+      </header>
+      <ScreenSizeLogger show={false} />
+    </>
   );
 }
 

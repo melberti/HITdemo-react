@@ -4,7 +4,7 @@ import EventsGrid from "../features/event/EventsGrid";
 function Home() {
   return (
     <>
-      <StringFilter />
+      <StringFilter placeholderText="Begin typing event name or performer or venue or category or city" />
       <EventsGrid />
     </>
   );

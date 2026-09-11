@@ -94,7 +94,7 @@ function AddVenue({ venue, onCloseModal, beforeOnClose }) {
 
   return (
     <>
-      <h2 className="mb-5 text-center">Add Venue</h2>
+      <h2 className="mb-5 text-center">{venue ? "Edit" : "Add"} Venue</h2>
       {/* fancy onSubmit; we need to stop the form post from propagating up to the AddEvent page when opened in a modal */}
       <form
         onSubmit={(event) => {
@@ -250,7 +250,12 @@ function AddVenue({ venue, onCloseModal, beforeOnClose }) {
               {venue?.id ? "Update" : "Submit"} Venue
             </SubmitButton>
             <ResetButton disabled={disabled} onClick={reset} />
-            <Button color="neutral" disabled={disabled} onClick={close}>
+            <Button
+              color="neutral"
+              disabled={disabled}
+              onClick={close}
+              type="button"
+            >
               Cancel
             </Button>
           </FormButtonRow>

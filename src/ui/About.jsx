@@ -11,9 +11,9 @@ function About() {
   return (
     <div className="content descriptor mx-2 mb-8">
       <p>
-        <span className="siteName">Hear There Everywhere</span> is a fictitious
-        music events web site loosely based on my friend Elisa Zuckerberg's real
-        events web site{" "}
+        <span className="siteName">Hear. There. Everywhere.</span> is a
+        fictitious music events web site loosely based on my friend Elisa
+        Zuckerberg's real events web site{" "}
         <a href="https://hearitthere.com" target="new">
           Hear It There
         </a>

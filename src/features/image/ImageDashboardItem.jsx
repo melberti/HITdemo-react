@@ -9,18 +9,18 @@ function ImageDashboardItem({ image }) {
   const imageUrl = `${eventImageBaseUrl}${myUserid}/${image.name}`;
 
   return (
-    <li className="relative flex flex-col overflow-hidden border-2 border-neutral-300 bg-white p-2">
+    <div className="content image-item col-span-1 min-w-0 p-2">
       {" "}
       <img
         src={imageUrl}
         alt={`Image named ${image.name}`}
         title={image.name}
-        className="mb-2"
+        className="mb-2 w-full"
       />
       {image.name}
       <br />
       Uploaded {formatShortDate(image.created_at)}
-    </li>
+    </div>
   );
 }
 

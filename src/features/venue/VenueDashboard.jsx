@@ -5,6 +5,7 @@ import Spinner from "../../ui/Spinner";
 import VenueDashboardList from "./VenueDashboardList";
 import Button from "../../ui/Button";
 import StringFilter from "../../ui/StringFilter";
+import Empty from "../../ui/Empty";
 
 function VenueDashboard() {
   const { venues, isLoading } = useMyVenues({
@@ -28,27 +29,37 @@ function VenueDashboard() {
 
   if (isLoading) return <Spinner />;
 
+  const topMarginClass = !displayVenues.length ? "mt-10" : "";
+
   return (
     <>
-      <div className="flex justify-between">
+      <div className={`flex justify-between ${topMarginClass}`}>
         <Button onClick={() => navigate("/addvenue")} color="secondary">
           Add Venue
         </Button>
-        <StringFilter
-          fullWidth={false}
-          filter={venueFilter}
-          setFilter={setVenueFilter}
-          color="pink"
-          placeholderText="Begin typing venue name or city"
-        />
-      </div>
-      <div className="mt-2 mb-10 grid grid-cols-6 gap-1 bg-neutral-200 p-1">
-        <div className="bg-primary-pink col-span-6 p-1 text-center text-white">
-          {venues.length} VENUE{displayVenues.length > 1 && "S"}
-        </div>
 
-        <VenueDashboardList venues={displayVenues} />
+        {!displayVenues.length ? (
+          <Empty resource="venues" />
+        ) : (
+          <StringFilter
+            fullWidth={false}
+            filter={venueFilter}
+            setFilter={setVenueFilter}
+            color="pink"
+            placeholderText="Begin typing venue name or city"
+          />
+        )}
       </div>
+
+      {displayVenues.length > 0 && (
+        <div className="dashboard-table grid-cols-6">
+          <div className="bg-primary-pink dashboard-heading col-span-6 p-1 text-center text-neutral-100">
+            {venues.length} VENUE{displayVenues.length !== 1 && "S"}
+          </div>
+
+          <VenueDashboardList venues={displayVenues} />
+        </div>
+      )}
     </>
   );
 }

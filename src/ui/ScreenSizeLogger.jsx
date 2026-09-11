@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useMedia } from "../context/MediaQueryContext";
 
 export default function ScreenSizeLogger({ show }) {
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const { isSmall, isMedium, isLarge } = useMedia();
 
   // Helper to match default Tailwind breakpoints
   const getTailwindBreakpoint = (width) => {
@@ -16,6 +18,8 @@ export default function ScreenSizeLogger({ show }) {
     return "default (mobile)";
   };
 
+  const [breakpoint, setBreakpoint] = useState();
+
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -23,10 +27,11 @@ export default function ScreenSizeLogger({ show }) {
 
       setWindowSize({ width, height });
 
-      show &&
-        console.log(
-          `Width: ${width}px, Height: ${height}px | Tailwind: ${getTailwindBreakpoint(width)}`,
-        );
+      const bp = getTailwindBreakpoint(width);
+      setBreakpoint(bp);
+
+      //show &&
+      //console.log(`Width: ${width}px, Height: ${height}px | Tailwind: ${bp}`);
     };
 
     // Log initial size on mount
@@ -34,17 +39,14 @@ export default function ScreenSizeLogger({ show }) {
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [show, setBreakpoint]);
 
   if (!show) return null;
+
   return (
-    <div className="p-6 text-center">
-      <p className="text-lg font-medium">
-        Resize your window and check the browser console.
-      </p>
-      <p className="mt-2 text-sm text-gray-500">
-        Current: {windowSize.width}px × {windowSize.height}px
-      </p>
+    <div className="text-primary-orange size-logger block text-center text-sm">
+      TW - {breakpoint} | isSmall - {String(isSmall)} | isMedium -{" "}
+      {String(isMedium)} | isLarge - {String(isLarge)}
     </div>
   );
 }

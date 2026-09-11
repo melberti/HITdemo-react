@@ -17,9 +17,9 @@ function ButtonFilter({ filterValue, options, buttonSize = "normal" }) {
 
   if (!options) return null;
   return (
-    <div className="flex w-auto items-end justify-end rounded-sm">
+    <div className="mx-1 my-1 flex w-auto items-end justify-end rounded-sm">
       {options.map((o, index) => {
-        const buttonClass = ` ${o.value === currentFilter ? "active" : ""} ${index === 0 ? "rounded-l-lg rounded-r-none" : index === maxIndex ? "rounded-r-lg rounded-l-none" : "rounded-none"}`;
+        const buttonClass = ` ${o.value === currentFilter ? "active" : ""} ${index === 0 ? "rounded-l-sm rounded-r-none" : index === maxIndex ? "rounded-r-sm rounded-l-none" : "rounded-none"}`;
 
         return (
           <Button

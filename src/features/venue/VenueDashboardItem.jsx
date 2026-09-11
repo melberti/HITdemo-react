@@ -1,4 +1,5 @@
 import { useUpdateVenue } from "./useUpdateVenue";
+import { useMedia } from "../../context/MediaQueryContext";
 import { formatPhoneNumber } from "../../utilities/utilities";
 import { formatWithLongDay } from "../../utilities/dateTimeFormats";
 import Modal from "../../ui/Modal";
@@ -8,6 +9,7 @@ import ConfirmAction from "../../ui/ConfirmAction";
 
 function VenueDashboardItem({ venue }) {
   const { isUpdating, updateVenue } = useUpdateVenue();
+  const { isSmall, isMedium, isLarge } = useMedia();
 
   function markVenueClosed() {
     updateVenue({
@@ -42,7 +44,7 @@ function VenueDashboardItem({ venue }) {
       <div>{formatPhoneNumber(venue.phone)}</div>
       <div>{venue.url}</div>
       <div>{formatWithLongDay(venue.created_at)}</div>
-      <div className="content flex gap-2">
+      <div className={`content flex gap-2 ${!isLarge && "flex-col"}`}>
         <Modal>
           {!venue.isRetired && (
             <>
@@ -64,7 +66,7 @@ function VenueDashboardItem({ venue }) {
                   type="button"
                   disabled={isUpdating}
                 >
-                  Mark as Closed
+                  {isSmall ? "Close" : "Mark as Closed"}
                 </Button>
               </Modal.Open>
             </>

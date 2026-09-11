@@ -8,6 +8,7 @@ import { EventImageProvider } from "./context/EventImageContext";
 import { EventVenueProvider } from "./context/EventVenueContext";
 import { VenueFilterProvider } from "./context/VenueFilterContext";
 import { AuthTimeoutProvider } from "./context/AuthTimeoutContext";
+import { MediaQueryProvider } from "./context/MediaQueryContext";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import AppLayout from "./ui/AppLayout";
 import SpinnerFullPage from "./ui/SpinnerFullPage";
@@ -35,47 +36,52 @@ window.__TANSTACK_QUERY_CLIENT__ = queryClient;
 function App() {
   return (
     <BrowserRouter>
-      <DarkModeProvider>
-        <AuthTimeoutProvider>
-          <EventFilterProvider>
-            <VenueFilterProvider>
-              <EventImageProvider>
-                <EventVenueProvider>
-                  <QueryClientProvider client={queryClient}>
-                    <Suspense fallback={<SpinnerFullPage />}>
-                      <Routes>
-                        {/* Shared layout for all pages */}
-                        <Route element={<AppLayout />}>
-                          {/* Public pages */}
-                          <Route path="/" element={<Home />} />
-                          <Route
-                            path="/home"
-                            element={<Navigate to="/" replace />}
-                          />
-                          <Route path="/signin" element={<SignIn />} />
-                          <Route path="/signup" element={<SignUp />} />
-                          <Route path="*" element={<NotFound />} />
+      <MediaQueryProvider>
+        <DarkModeProvider>
+          <AuthTimeoutProvider>
+            <EventFilterProvider>
+              <VenueFilterProvider>
+                <EventImageProvider>
+                  <EventVenueProvider>
+                    <QueryClientProvider client={queryClient}>
+                      <Suspense fallback={<SpinnerFullPage />}>
+                        <Routes>
+                          {/* Shared layout for all pages */}
+                          <Route element={<AppLayout />}>
+                            {/* Public pages */}
+                            <Route path="/" element={<Home />} />
+                            <Route
+                              path="/home"
+                              element={<Navigate to="/" replace />}
+                            />
+                            <Route path="/signin" element={<SignIn />} />
+                            <Route path="/signup" element={<SignUp />} />
+                            <Route path="*" element={<NotFound />} />
 
-                          {/* Protected wrapper */}
-                          <Route element={<ProtectedRoute />}>
-                            <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/profile" element={<Profile />} />
+                            {/* Protected wrapper */}
+                            <Route element={<ProtectedRoute />}>
+                              <Route
+                                path="/dashboard"
+                                element={<Dashboard />}
+                              />
+                              <Route path="/profile" element={<Profile />} />
 
-                            <Route path="/addevent" element={<AddEvent />} />
-                            <Route path="/addvenue" element={<AddVenue />} />
-                            <Route path="/addimage" element={<AddImage />} />
+                              <Route path="/addevent" element={<AddEvent />} />
+                              <Route path="/addvenue" element={<AddVenue />} />
+                              <Route path="/addimage" element={<AddImage />} />
+                            </Route>
                           </Route>
-                        </Route>
-                      </Routes>
-                    </Suspense>
-                    <Toaster />
-                  </QueryClientProvider>
-                </EventVenueProvider>
-              </EventImageProvider>
-            </VenueFilterProvider>
-          </EventFilterProvider>
-        </AuthTimeoutProvider>
-      </DarkModeProvider>
+                        </Routes>
+                      </Suspense>
+                      <Toaster />
+                    </QueryClientProvider>
+                  </EventVenueProvider>
+                </EventImageProvider>
+              </VenueFilterProvider>
+            </EventFilterProvider>
+          </AuthTimeoutProvider>
+        </DarkModeProvider>
+      </MediaQueryProvider>
     </BrowserRouter>
   );
 }

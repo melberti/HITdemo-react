@@ -15,10 +15,7 @@ export function useUploadImage() {
         },
 
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["myImages"] }),
-        // onMutate: (variables) => {
-        //     console.log("Data passed to mutationFn:", variables);
 
-        // },
     })
 
     return { uploadImage, isUploading }

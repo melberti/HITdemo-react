@@ -1,5 +1,9 @@
 import { Link } from "react-router";
-import { formatWithDayShortMonth } from "../../utilities/dateTimeFormats";
+import { useMedia } from "../../context/MediaQueryContext";
+import {
+  formatShortDate,
+  formatWithDayShortMonth,
+} from "../../utilities/dateTimeFormats";
 import {
   defaultImageUrl,
   getFilenameFromUrl,
@@ -16,6 +20,8 @@ import AddEvent from "../../pages/AddEvent";
 function EventDashboardItem({ event }) {
   const { user } = useUser();
   const userId = user?.id;
+
+  const { isSmall, isMedium, isLarge } = useMedia();
 
   const imageUrl = event.imageUrl || defaultImageUrl;
 
@@ -52,22 +58,28 @@ function EventDashboardItem({ event }) {
   return (
     <Modal>
       <div className="contents">
-        <div>{formatWithDayShortMonth(event.eventDate)}</div>
+        <div>
+          {isSmall
+            ? formatShortDate(event.eventDate)
+            : formatWithDayShortMonth(event.eventDate)}
+        </div>
         <div>{event.title}</div>
         <div>
           {event.venue.name},<br />
           {event.venue.city} {event.venue.state}
         </div>
-        <div className="whitespace-nowrap">{event.category.value}</div>
-        <div>{event.cost == 0 ? "FREE" : `$${event.cost}`}</div>
-        <div className="whitespace-nowrap">
-          {imageUrl !== defaultImageUrl && (
-            <Modal.Open opens="imageUrl">
-              <Link>{getFilenameFromUrl(imageUrl, userId)}</Link>
-            </Modal.Open>
-          )}
-        </div>
-        <div className={`${statusClassName} whitespace-nowrap`}>
+        {isLarge && <div>{event.category.value}</div>}
+        {!isSmall && <div>{event.cost == 0 ? "FREE" : `$${event.cost}`}</div>}
+        {isLarge && (
+          <div>
+            {imageUrl !== defaultImageUrl && (
+              <Modal.Open opens="imageUrl">
+                <Link>{getFilenameFromUrl(imageUrl, userId)}</Link>
+              </Modal.Open>
+            )}
+          </div>
+        )}
+        <div className={`${statusClassName} text-nowrap!`}>
           {event.isPostponed
             ? "POSTPONED"
             : event.isCancelled
@@ -75,7 +87,7 @@ function EventDashboardItem({ event }) {
               : ""}
         </div>
 
-        <div className="content flex gap-2">
+        <div className={`content flex gap-2 ${!isLarge && "flex-col"}`}>
           {eventDateForCompare >= today && (
             <Modal.Open opens="edit">
               <Button color="primary" size="small" type="button">

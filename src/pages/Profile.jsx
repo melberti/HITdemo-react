@@ -28,7 +28,9 @@ function Profile() {
     );
   }
 
-  function invalidSubmit() {}
+  function cancel() {
+    navigate("/dashboard");
+  }
 
   const disabled = isLoading || isUpdating;
 
@@ -42,11 +44,10 @@ function Profile() {
           You must provide a valid email address.
         </span>{" "}
         Any change to email address after sign up will generate emails to both
-        old and new addresses. The new address will receive an email from
+        old and new addresses. Both addresses will receive an email from
         Supabase with the subject "Confirm your email address". You must confirm
-        your address before you can sign in using that email address, or see
-        that address in your profile. The email sent to the old address will
-        advise that the change was made.
+        the change from BOTH accounts before you can sign in using that email
+        address or see that address in your profile.
       </p>
       <p className="mx-100">
         Please note that because this is a demo web site, there are email limits
@@ -56,7 +57,7 @@ function Profile() {
       </p>
       <form
         onSubmit={(event) => {
-          handleSubmit(submitFunc, invalidSubmit)(event);
+          handleSubmit(submitFunc)(event);
         }}
       >
         <FormContainer>
@@ -128,7 +129,12 @@ function Profile() {
           <FormButtonRow>
             <SubmitButton disabled={disabled}>Update Profile</SubmitButton>
             <ResetButton disabled={disabled} onClick={reset} />
-            <Button color="neutral" disabled={disabled} onClick={close}>
+            <Button
+              color="neutral"
+              disabled={disabled}
+              onClick={cancel}
+              type="button"
+            >
               Cancel
             </Button>
           </FormButtonRow>
