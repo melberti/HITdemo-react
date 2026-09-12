@@ -50,6 +50,18 @@ function EventDashboard() {
     );
   }
 
+  const gridColClass = isLarge
+    ? "grid-cols-[repeat(7,minmax(0,1fr))_max-content]"
+    : isSmall
+      ? "grid-cols-[repeat(4,minmax(0,1fr))_max-content]"
+      : "grid-cols-[repeat(5,minmax(0,1fr))_max-content]";
+
+  const colspanClass = isLarge
+    ? "col-span-8"
+    : isSmall
+      ? "col-span-5"
+      : "col-span-6";
+
   if (isLoading) return <Spinner />;
 
   return (
@@ -101,11 +113,9 @@ function EventDashboard() {
       </div>
 
       {displayEvents.length > 0 && (
-        <div
-          className={`dashboard-table grid-cols-[repeat(${isLarge ? "8" : isSmall ? "5" : "6"},minmax(0,1fr))]`}
-        >
+        <div className={`dashboard-table ${gridColClass}`}>
           <div
-            className={`bg-primary-orange dashboard-heading text-neutral-100 col-span-${isLarge ? "8" : isSmall ? "5" : "6"} p-1 text-center`}
+            className={`bg-primary-orange dashboard-heading text-neutral-100 ${colspanClass} p-1 text-center`}
           >
             {displayEvents.length} EVENT{displayEvents.length !== 1 && "S"}
           </div>
