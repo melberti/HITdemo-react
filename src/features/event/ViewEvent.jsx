@@ -52,7 +52,7 @@ function ViewEvent({ event }) {
   const reduceVisibilityClass = reduceVisibility ? "delayedOrCancelled" : "";
 
   return (
-    <div className="content event-grid-item relative flex w-[425px] flex-col overflow-hidden border-2 border-neutral-300 bg-white p-2">
+    <div className="content event-grid-item relative flex flex-col overflow-hidden border-2 border-neutral-300 bg-white p-2">
       <EventOverlay
         isPostponed={event.isPostponed}
         isCancelled={event.isCancelled}

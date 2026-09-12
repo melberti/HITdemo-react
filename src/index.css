@@ -172,7 +172,7 @@ Tailwind builds CSS in this order:
 
   button.small,
   .button.small {
-    @apply h-4 px-1 text-[10px] md:h-6 md:text-xs lg:h-6 lg:px-2 lg:text-sm;
+    @apply h-5 px-1 text-[10px] md:h-6 md:text-xs lg:h-6 lg:px-2 lg:text-sm;
   }
 
   button.normal,
