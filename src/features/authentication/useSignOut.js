@@ -17,7 +17,7 @@ export function useSignOut() {
             return null;
         },
         onSuccess: () => {
-            queryClient.removeQueries();
+            queryClient.invalidateQueries(["user"]);
 
             navigate("/", { replace: true });
         }
