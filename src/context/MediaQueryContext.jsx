@@ -8,7 +8,7 @@ function MediaQueryProvider({ children }) {
   const isMedium = useMediaQuery({ query: "(min-width: 768px)" });
   const isLarge = useMediaQuery({ query: "(min-width: 1094px)" });
 
-  console.log("isSm", isSmall, "isMd", isMedium, "isLg", isLarge);
+  //console.log("isSm", isSmall, "isMd", isMedium, "isLg", isLarge);
 
   return (
     <MediaQueryContext.Provider value={{ isSmall, isMedium, isLarge }}>

@@ -4,18 +4,23 @@ import { toast } from "react-hot-toast";
 import { useSignIn } from "../features/authentication/useSignIn";
 import { emailValidationRegex } from "../utilities/utilities";
 import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router";
 import Button from "../ui/Button";
 import SubmitButton from "../ui/SubmitButton";
 import ResetButton from "../ui/ResetButton";
 import InputDiv from "../ui/InputDiv";
 import FormContainer from "../ui/FormContainer";
 import FormButtonRow from "../ui/FormButtonRow";
+import SessionExpired from "../ui/SessionExpired";
 
 function SignIn() {
   const { register, handleSubmit, formState, reset } = useForm();
   const { errors } = formState;
   const { signIn, isPending } = useSignIn();
   const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const isExpired = searchParams.get("reason")?.toLowerCase() === "expired";
 
   function submitFunc(data) {
     if (!errors.length) {
@@ -42,6 +47,7 @@ function SignIn() {
 
   return (
     <>
+      {isExpired && <SessionExpired />}
       <h2 className="mb-5 text-center">Sign In</h2>
       <form onSubmit={handleSubmit(submitFunc)}>
         <FormContainer>
